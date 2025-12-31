@@ -82,9 +82,11 @@ public class ProductInformationService {
         CustomerServiceResponse customerService = null;
         if (product.getCustomerService() != null) {
             customerService = CustomerServiceResponse.builder()
+                    .id(product.getCustomerService().getId())
                     .phone(product.getCustomerService().getPhone())
                     .email(product.getCustomerService().getEmail())
                     .operationTime(product.getCustomerService().getOperationTime())
+                    .chatLink(product.getCustomerService().getChatLink())
                     .build();
         }
 
