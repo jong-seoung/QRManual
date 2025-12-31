@@ -1,5 +1,6 @@
 package com.QRManual.Backend.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +25,7 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -78,5 +79,9 @@ public class User implements UserDetails {
     private AuthProvider provider;
 
     private String providerId;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private CompanyInfo companyInfo;
 
 }

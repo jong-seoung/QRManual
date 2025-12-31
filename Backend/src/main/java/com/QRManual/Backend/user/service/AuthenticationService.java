@@ -1,5 +1,6 @@
 package com.QRManual.Backend.user.service;
 
+import com.QRManual.Backend.exception.AccessDeniedException;
 import com.QRManual.Backend.exception.ResourceNotFoundException;
 import com.QRManual.Backend.user.entity.User;
 import com.QRManual.Backend.user.repository.UserRepository;
@@ -37,5 +38,15 @@ public class AuthenticationService {
         return userRepository.findByUsername(username)
                 .or(() -> userRepository.findByEmail(username))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found for username: " + username));
+    }
+
+    public User checkCompany(){
+        User currentUser = getCurrentUser();
+
+        if (currentUser.getRole() == null || !currentUser.getRole().equalsIgnoreCase("ROLE_COMPANY")) {
+            throw new AccessDeniedException("기업 계정이 아닙니다.");
+        }
+
+        return currentUser;
     }
 }

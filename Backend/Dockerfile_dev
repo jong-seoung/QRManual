@@ -1,0 +1,25 @@
+FROM eclipse-temurin:17-jdk-jammy
+
+# 작업 디렉토리
+WORKDIR /app
+
+# curl 설치 (필요시)
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+# 비루트 사용자 생성
+RUN addgroup --system spring && adduser --system spring --ingroup spring
+USER spring
+
+# 소스코드와 Gradle Wrapper를 그대로 복사
+COPY --chown=spring:spring gradlew build.gradle settings.gradle ./
+COPY --chown=spring:spring gradle gradle
+COPY --chown=spring:spring src src
+
+# gradlew 실행 권한
+RUN chmod +x gradlew
+
+# 포트 노출
+EXPOSE 8080
+
+# 개발 모드로 Spring Boot 실행 (hot reload 가능)
+ENTRYPOINT ["./gradlew", "bootRun"]

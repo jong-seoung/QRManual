@@ -1,6 +1,9 @@
 package com.QRManual.Backend.user.dto;
 
+import com.QRManual.Backend.user.entity.CompanyInfo;
 import com.QRManual.Backend.user.entity.User;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +23,9 @@ public class UserDto {
     private String role;
     private String profileImageUrl;
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private CompanyInfo companyInfo;
+
     public static UserDto fromEntity(User user){
         return UserDto.builder()
                 .id(user.getId())
@@ -29,6 +35,7 @@ public class UserDto {
                 .address(user.getAddress())
                 .role(user.getRole())
                 .profileImageUrl(user.getProfileImageUrl())
+                .companyInfo(user.getCompanyInfo())
                 .build();
     }
 }
