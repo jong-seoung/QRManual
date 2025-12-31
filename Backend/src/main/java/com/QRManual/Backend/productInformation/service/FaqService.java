@@ -45,7 +45,7 @@ public class FaqService {
         User user = authenticationService.checkCompany();
 
         Faq faq = faqRepository.findById(faqId)
-                .orElseThrow(()-> new IllegalArgumentException("고객센터 정보를 찾을 수 없습니다."));
+                .orElseThrow(()-> new IllegalArgumentException("요청한 리소스를 수 없습니다."));
 
         ProductInformation productInformation = faq.getProductInformation();
 

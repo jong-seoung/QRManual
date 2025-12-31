@@ -10,6 +10,7 @@ import com.QRManual.Backend.user.entity.User;
 import com.QRManual.Backend.user.service.AuthenticationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -37,5 +38,22 @@ public class ManualService {
         return ManualResponse.builder()
                 .id(saved.getId())
                 .build();
+    }
+
+    @Transactional
+    public void deleteManual(Long manualId){
+        User user = authenticationService.checkCompany();
+
+        Manual manual = manualRepository.findById(manualId)
+                .orElseThrow(()-> new IllegalArgumentException("요청한 리소스를 찾을 수 없습니다."));
+
+        ProductInformation productInformation = manual.getProductInformation();
+
+        authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
+
+        productInformation.getManuals().remove(manual);
+        manual.setProductInformation(null);
+
+        manualRepository.delete(manual);
     }
 }

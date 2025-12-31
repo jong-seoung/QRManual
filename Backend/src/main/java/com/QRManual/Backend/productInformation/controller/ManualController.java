@@ -4,10 +4,8 @@ import com.QRManual.Backend.productInformation.dto.ManualRequest;
 import com.QRManual.Backend.productInformation.dto.ManualResponse;
 import com.QRManual.Backend.productInformation.service.ManualService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/manual")
@@ -18,5 +16,11 @@ public class ManualController {
     @PostMapping("/create")
     public ManualResponse createManual(@RequestBody ManualRequest request){
         return manualService.createManual(request);
+    }
+
+    @DeleteMapping("/delete/{manualId}")
+    public ResponseEntity<Void> deleteManual(@PathVariable Long manualId){
+        manualService.deleteManual(manualId);
+        return ResponseEntity.noContent().build();
     }
 }
