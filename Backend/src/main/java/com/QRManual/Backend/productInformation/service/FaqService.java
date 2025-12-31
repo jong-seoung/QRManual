@@ -2,6 +2,7 @@ package com.QRManual.Backend.productInformation.service;
 
 import com.QRManual.Backend.productInformation.dto.FaqRequest;
 import com.QRManual.Backend.productInformation.dto.FaqResponse;
+import com.QRManual.Backend.productInformation.entity.CustomerService;
 import com.QRManual.Backend.productInformation.entity.Faq;
 import com.QRManual.Backend.productInformation.entity.ProductInformation;
 import com.QRManual.Backend.productInformation.repository.FaqRepository;
@@ -10,6 +11,7 @@ import com.QRManual.Backend.user.entity.User;
 import com.QRManual.Backend.user.service.AuthenticationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -36,6 +38,23 @@ public class FaqService {
         return FaqResponse.builder()
                 .id(saved.getId())
                 .build();
+    }
+
+    @Transactional
+    public void deleteFaq(Long faqId){
+        User user = authenticationService.checkCompany();
+
+        Faq faq = faqRepository.findById(faqId)
+                .orElseThrow(()-> new IllegalArgumentException("고객센터 정보를 찾을 수 없습니다."));
+
+        ProductInformation productInformation = faq.getProductInformation();
+
+        authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
+
+        productInformation.getFaqs().remove(faq);
+        faq.setProductInformation(null);
+
+        faqRepository.delete(faq);
     }
 
 }
