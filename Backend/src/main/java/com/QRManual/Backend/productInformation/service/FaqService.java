@@ -24,6 +24,8 @@ public class FaqService {
         ProductInformation productInformation = productInformationRepository.findById(request.getProductInformation_id())
                 .orElseThrow(()-> new IllegalArgumentException("제품 정보를 찾을 수 없습니다."));
 
+        authenticationService.getOwnedProductInformation(user, productInformation);
+
         Faq faq = new Faq();
         faq.setProductInformation(productInformation);
         faq.setAnswer(request.getAnswer());

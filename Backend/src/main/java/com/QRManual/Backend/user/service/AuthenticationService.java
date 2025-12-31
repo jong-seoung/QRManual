@@ -2,6 +2,7 @@ package com.QRManual.Backend.user.service;
 
 import com.QRManual.Backend.exception.AccessDeniedException;
 import com.QRManual.Backend.exception.ResourceNotFoundException;
+import com.QRManual.Backend.productInformation.entity.ProductInformation;
 import com.QRManual.Backend.user.entity.CompanyInfo;
 import com.QRManual.Backend.user.entity.User;
 import com.QRManual.Backend.user.repository.UserRepository;
@@ -54,5 +55,11 @@ public class AuthenticationService {
         }
 
         return currentUser;
+    }
+
+    public void getOwnedProductInformation(User user, ProductInformation productInformation){
+        if (!productInformation.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("해당 제품에 대한 권한이 없습니다.");
+        }
     }
 }
