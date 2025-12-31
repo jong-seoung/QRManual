@@ -24,7 +24,7 @@ public class PartService {
         ProductInformation productInformation = productInformationRepository.findById(request.getProductInformation_id())
                 .orElseThrow(()-> new IllegalArgumentException("제품 정보를 찾을 수 없습니다."));
 
-        authenticationService.getOwnedProductInformation(user, productInformation);
+        authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
         Parts parts = new Parts();
         parts.setProductInformation(productInformation);

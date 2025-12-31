@@ -99,5 +99,18 @@ public class ProductInformationService {
                 .customerService(customerService)
                 .build();
     }
+
+    public void deleteProductInformation(Long productInformationId){
+        User user = authenticationService.checkCompany();
+
+        ProductInformation productInformation = productInformationRepository.findById(productInformationId)
+                .orElseThrow(()-> new IllegalArgumentException("제품 정보를 찾을 수 없습니다."));
+
+        authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
+
+        productInformation.setDeleted(true);
+
+        productInformationRepository.save(productInformation);
+    }
 }
 

@@ -26,16 +26,16 @@ public class ProductInformation {
     private String publicStoreLink;
     private boolean deleted;
 
-    @OneToMany(mappedBy = "productInformation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "productInformation")
     private List<Manual> manuals;
 
-    @OneToOne(mappedBy = "productInformation", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "productInformation")
     private CustomerService customerService;
 
 
-    @OneToMany(mappedBy = "productInformation", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "productInformation")
     private List<Parts> partsList;
 
-    @OneToMany(mappedBy = "productInformation", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "productInformation")
     private List<Faq> faqs;
 }

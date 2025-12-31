@@ -10,6 +10,7 @@ import com.QRManual.Backend.user.entity.User;
 import com.QRManual.Backend.user.service.AuthenticationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -24,7 +25,7 @@ public class CustomerServiceService {
         ProductInformation productInformation = productInformationRepository.findById(request.getProductInformation_id())
                 .orElseThrow(()-> new IllegalArgumentException("제품 정보를 찾을 수 없습니다."));
 
-        authenticationService.getOwnedProductInformation(user, productInformation);
+        authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
         CustomerService customerService = new CustomerService();
         customerService.setProductInformation(productInformation);
@@ -38,5 +39,22 @@ public class CustomerServiceService {
         return CustomerServiceResponse.builder()
                 .id(saved.getId())
                 .build();
+    }
+
+    @Transactional
+    public void deleteCustomerService(Long customerServiceId){
+        User user = authenticationService.checkCompany();
+
+        CustomerService customerService = customerServiceRepository.findById(customerServiceId)
+                .orElseThrow(()-> new IllegalArgumentException("고객센터 정보를 찾을 수 없습니다."));
+
+        ProductInformation productInformation = customerService.getProductInformation();
+
+        authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
+
+        productInformation.setCustomerService(null);
+        customerService.setProductInformation(null);
+
+        customerServiceRepository.delete(customerService);
     }
 }

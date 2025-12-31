@@ -57,8 +57,8 @@ public class AuthenticationService {
         return currentUser;
     }
 
-    public void getOwnedProductInformation(User user, ProductInformation productInformation){
-        if (!productInformation.getUser().getId().equals(user.getId())) {
+    public void checkProductOwnership(Long userId, Long productInformationId){
+        if (!productInformationId.equals(userId)) {
             throw new AccessDeniedException("해당 제품에 대한 권한이 없습니다.");
         }
     }

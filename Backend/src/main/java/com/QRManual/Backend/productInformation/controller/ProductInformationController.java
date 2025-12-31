@@ -5,6 +5,7 @@ import com.QRManual.Backend.productInformation.dto.ProductInformationRequest;
 import com.QRManual.Backend.productInformation.dto.ProductInformationResponse;
 import com.QRManual.Backend.productInformation.service.ProductInformationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,5 +28,11 @@ public class ProductInformationController {
     @GetMapping("/detail/{productInformationId}")
     public ProductInformationDetailResponse getProductInformationDetail(@PathVariable Long productInformationId) {
         return productInformationService.getProductInformationDetail(productInformationId);
+    }
+
+    @DeleteMapping("/delete/{productInformationId}")
+    public ResponseEntity<Void> deleteProductInformation(@PathVariable Long productInformationId){
+        productInformationService.deleteProductInformation(productInformationId);
+        return ResponseEntity.noContent().build();
     }
 }
