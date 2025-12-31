@@ -4,10 +4,8 @@ import com.QRManual.Backend.productInformation.dto.PartsRequest;
 import com.QRManual.Backend.productInformation.dto.PartsResponse;
 import com.QRManual.Backend.productInformation.service.PartService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/part")
@@ -18,5 +16,11 @@ public class PartController {
     @PostMapping("/create")
     public PartsResponse createPart(@RequestBody PartsRequest request){
         return partService.createPart(request);
+    }
+
+    @DeleteMapping("/delete/{partId}")
+    public ResponseEntity<Void> deletePart(@PathVariable Long partId){
+        partService.deletePart(partId);
+        return ResponseEntity.noContent().build();
     }
 }

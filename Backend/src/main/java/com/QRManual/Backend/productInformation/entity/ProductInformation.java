@@ -38,4 +38,9 @@ public class ProductInformation {
 
     @OneToMany(mappedBy = "productInformation")
     private List<Faq> faqs;
+
+    public void removePart(Parts parts) {
+        this.partsList.remove(parts);
+        parts.setProductInformation(null);
+    }
 }
