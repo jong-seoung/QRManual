@@ -52,8 +52,7 @@ public class CustomerServiceService {
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
-        productInformation.setCustomerService(null);
-        customerService.setProductInformation(null);
+        productInformation.removeCustomerService();
 
         customerServiceRepository.delete(customerService);
     }

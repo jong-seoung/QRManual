@@ -51,8 +51,7 @@ public class FaqService {
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
-        productInformation.getFaqs().remove(faq);
-        faq.setProductInformation(null);
+        productInformation.removeFaq(faq);
 
         faqRepository.delete(faq);
     }

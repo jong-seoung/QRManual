@@ -51,8 +51,7 @@ public class ManualService {
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
-        productInformation.getManuals().remove(manual);
-        manual.setProductInformation(null);
+        productInformation.removeManual(manual);
 
         manualRepository.delete(manual);
     }
