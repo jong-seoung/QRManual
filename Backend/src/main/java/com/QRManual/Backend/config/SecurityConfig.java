@@ -43,7 +43,7 @@ public class SecurityConfig {
                                         "/api/auth/**",
                                         "/api/images/**",
                                         "/api/company/**",
-                                        "/api/product-information/**",
+                                        "/api/v1/**",
                                         "/oauth2/**",
                                         "/login/oauth2/**",
                                         "/error",

@@ -2,6 +2,7 @@ package com.QRManual.Backend.user.service;
 
 import com.QRManual.Backend.exception.AccessDeniedException;
 import com.QRManual.Backend.exception.ResourceNotFoundException;
+import com.QRManual.Backend.user.entity.CompanyInfo;
 import com.QRManual.Backend.user.entity.User;
 import com.QRManual.Backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +43,14 @@ public class AuthenticationService {
 
     public User checkCompany(){
         User currentUser = getCurrentUser();
+        CompanyInfo companyInfo = currentUser.getCompanyInfo();
 
         if (currentUser.getRole() == null || !currentUser.getRole().equalsIgnoreCase("ROLE_COMPANY")) {
             throw new AccessDeniedException("기업 계정이 아닙니다.");
+        }
+
+        if (companyInfo == null){
+            throw new IllegalStateException("회사 정보가 등록되지 않은 사용자 입니다.");
         }
 
         return currentUser;

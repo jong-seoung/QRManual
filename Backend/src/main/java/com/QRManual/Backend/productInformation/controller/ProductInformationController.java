@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/product-information")
+@RequestMapping("/api/v1/product-information")
 @RequiredArgsConstructor
 public class ProductInformationController {
 

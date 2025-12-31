@@ -20,11 +20,6 @@ public class ProductInformationService {
 
     public ProductInformationResponse createProductInformation(ProductInformationRequest request){
         User user = authenticationService.checkCompany();
-        CompanyInfo companyInfo = user.getCompanyInfo();
-
-        if (companyInfo == null){
-            throw new IllegalStateException("회사 정보가 등록되지 않은 사용자 입니다.");
-        }
 
         ProductInformation productInformation = new ProductInformation();
         productInformation.setName(request.getName());

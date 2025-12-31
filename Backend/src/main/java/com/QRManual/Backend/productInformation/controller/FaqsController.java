@@ -1,0 +1,20 @@
+package com.QRManual.Backend.productInformation.controller;
+
+import com.QRManual.Backend.productInformation.dto.FaqRequest;
+import com.QRManual.Backend.productInformation.dto.FaqResponse;
+import com.QRManual.Backend.productInformation.service.FaqService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/faq")
+@RequiredArgsConstructor
+public class FaqsController {
+
+    private final FaqService faqService;
+
+    @PostMapping("/create")
+    public FaqResponse createFaq(@RequestBody FaqRequest request){
+        return faqService.createFaq(request);
+    }
+}
