@@ -23,7 +23,7 @@ public class ManualService {
     public ManualResponse createManual(ManualRequest request){
         User user = authenticationService.checkCompany();
 
-        ProductInformation productInformation = productInformationRepository.findById(request.getProductInformation_id())
+        ProductInformation productInformation = productInformationRepository.findByIdAndDeletedFalse(request.getProductInformation_id())
                 .orElseThrow(()-> new IllegalArgumentException("제품 정보를 찾을 수 없습니다."));
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
@@ -37,6 +37,25 @@ public class ManualService {
 
         return ManualResponse.builder()
                 .id(saved.getId())
+                .build();
+    }
+
+    @Transactional
+    public ManualResponse editManual(Long manualId, ManualRequest request){
+        User user = authenticationService.checkCompany();
+
+        Manual manual = manualRepository.findById(manualId)
+                .orElseThrow(()-> new IllegalArgumentException("요청한 리소스를 찾을 수 없습니다"));
+
+        ProductInformation productInformation = manual.getProductInformation();
+
+        authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
+
+        manual.setLanguage(request.getLanguage());
+        manual.setPdfUrl(request.getPdfUrl());
+
+        return ManualResponse.builder()
+                .id(manual.getId())
                 .build();
     }
 

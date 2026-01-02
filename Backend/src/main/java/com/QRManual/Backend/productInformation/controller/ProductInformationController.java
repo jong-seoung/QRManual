@@ -20,6 +20,11 @@ public class ProductInformationController {
         return productInformationService.createProductInformation(request);
     }
 
+    @PutMapping("/edit/{productInformationId}")
+    public ProductInformationResponse editProductInformation(@PathVariable Long productInformationId, @RequestBody ProductInformationRequest request){
+        return productInformationService.editProductInformation(productInformationId, request);
+    }
+
     @PostMapping("/test")
     public String test() {
         return "OK12";

@@ -23,7 +23,7 @@ public class FaqService {
     public FaqResponse createFaq(FaqRequest request){
         User user = authenticationService.checkCompany();
 
-        ProductInformation productInformation = productInformationRepository.findById(request.getProductInformation_id())
+        ProductInformation productInformation = productInformationRepository.findByIdAndDeletedFalse(request.getProductInformation_id())
                 .orElseThrow(()-> new IllegalArgumentException("제품 정보를 찾을 수 없습니다."));
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
@@ -37,6 +37,25 @@ public class FaqService {
 
         return FaqResponse.builder()
                 .id(saved.getId())
+                .build();
+    }
+
+    @Transactional
+    public FaqResponse editFaq(Long faqId, FaqRequest request){
+        User user = authenticationService.checkCompany();
+
+        Faq faq = faqRepository.findById(faqId)
+                .orElseThrow(()-> new IllegalArgumentException("요청한 리소스를 찾을 수 없습니다."));
+
+        ProductInformation productInformation = faq.getProductInformation();
+
+        authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
+
+        faq.setQuestion(request.getQuestion());
+        faq.setAnswer(request.getAnswer());
+
+        return FaqResponse.builder()
+                .id(faq.getId())
                 .build();
     }
 

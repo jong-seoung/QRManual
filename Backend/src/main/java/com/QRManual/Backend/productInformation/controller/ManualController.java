@@ -18,6 +18,11 @@ public class ManualController {
         return manualService.createManual(request);
     }
 
+    @PutMapping("/edit/{manualId}")
+    public ManualResponse editManual(@PathVariable Long manualId, @RequestBody ManualRequest request){
+        return manualService.editManual(manualId, request);
+    }
+
     @DeleteMapping("/delete/{manualId}")
     public ResponseEntity<Void> deleteManual(@PathVariable Long manualId){
         manualService.deleteManual(manualId);

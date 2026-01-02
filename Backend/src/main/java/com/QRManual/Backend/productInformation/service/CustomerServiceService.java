@@ -22,8 +22,8 @@ public class CustomerServiceService {
     public CustomerServiceResponse createCustomerService(CustomerServiceRequest request){
         User user = authenticationService.checkCompany();
 
-        ProductInformation productInformation = productInformationRepository.findById(request.getProductInformation_id())
-                .orElseThrow(()-> new IllegalArgumentException("제품 정보를 찾을 수 없습니다."));
+        ProductInformation productInformation = productInformationRepository.findByIdAndDeletedFalse(request.getProductInformation_id())
+                .orElseThrow(()-> new IllegalArgumentException("요청한 리소스를 찾을 수 없습니다."));
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
@@ -42,11 +42,32 @@ public class CustomerServiceService {
     }
 
     @Transactional
+    public CustomerServiceResponse editCustomerService(Long customerServiceId, CustomerServiceRequest request){
+        User user = authenticationService.checkCompany();
+
+        CustomerService customerService = customerServiceRepository.findById(customerServiceId)
+                .orElseThrow(()-> new IllegalArgumentException("요청한 리소스를 찾을 수 없습니다."));
+
+        ProductInformation productInformation = customerService.getProductInformation();
+
+        authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
+
+        customerService.setEmail(request.getEmail());
+        customerService.setPhone(request.getPhone());
+        customerService.setChatLink(request.getChatLink());
+        customerService.setOperationTime(request.getOperationTime());
+
+        return CustomerServiceResponse.builder()
+                .id(customerService.getId())
+                .build();
+    }
+
+    @Transactional
     public void deleteCustomerService(Long customerServiceId){
         User user = authenticationService.checkCompany();
 
         CustomerService customerService = customerServiceRepository.findById(customerServiceId)
-                .orElseThrow(()-> new IllegalArgumentException("고객센터 정보를 찾을 수 없습니다."));
+                .orElseThrow(()-> new IllegalArgumentException("요청한 리소스를 찾을 수 없습니다."));
 
         ProductInformation productInformation = customerService.getProductInformation();
 

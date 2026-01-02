@@ -18,6 +18,11 @@ public class PartController {
         return partService.createPart(request);
     }
 
+    @PutMapping("/edit/{partId}")
+    public PartsResponse editPart(@PathVariable Long partId, @RequestBody PartsRequest request){
+        return partService.editPart(partId, request);
+    }
+
     @DeleteMapping("/delete/{partId}")
     public ResponseEntity<Void> deletePart(@PathVariable Long partId){
         partService.deletePart(partId);

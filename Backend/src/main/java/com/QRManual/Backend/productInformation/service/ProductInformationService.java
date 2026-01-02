@@ -4,11 +4,11 @@ import com.QRManual.Backend.productInformation.dto.*;
 import com.QRManual.Backend.productInformation.entity.ProductInformation;
 import com.QRManual.Backend.productInformation.repository.ProductInformationRepository;
 import com.QRManual.Backend.user.dto.UserDto;
-import com.QRManual.Backend.user.entity.CompanyInfo;
 import com.QRManual.Backend.user.entity.User;
 import com.QRManual.Backend.user.service.AuthenticationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,6 +35,27 @@ public class ProductInformationService {
 
         return ProductInformationResponse.builder()
                 .id(saved.getId())
+                .build();
+    }
+
+    @Transactional
+    public ProductInformationResponse editProductInformation(Long productInformationId, ProductInformationRequest request){
+        User user = authenticationService.checkCompany();
+
+        ProductInformation productInformation = productInformationRepository.findByIdAndDeletedFalse(productInformationId)
+                .orElseThrow(()-> new IllegalArgumentException("요청한 리소스를 찾을 수 없습니다"));
+
+        authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
+
+        productInformation.setName(request.getName());
+        productInformation.setModelCode(request.getModelCode());
+        productInformation.setReleaseYear(request.getReleaseYear());
+        productInformation.setSerialNumberLocation(request.getSerialNumberLocation());
+        productInformation.setProductPage(request.getProductPage());
+        productInformation.setPublicStoreLink(request.getPublicStoreLink());
+
+        return ProductInformationResponse.builder()
+                .id(productInformation.getId())
                 .build();
     }
 
