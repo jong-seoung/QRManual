@@ -1,4 +1,6 @@
 const ProductInformationCard = ({ productInformationList }) => {
+
+  console.log(productInformationList);
     return (
     <tbody className="divide-y divide-border-light dark:divide-border-dark">
       {productInformationList.map((item) => (

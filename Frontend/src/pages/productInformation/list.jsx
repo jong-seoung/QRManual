@@ -3,16 +3,11 @@ import FilterAndSearch from "../../components/productInformation/filterAndSearch
 import ProductInformationCard from "../../components/productInformation/ProductInformationCard.jsx";
 import productInformationStore from "../../store/productInformationStore";
 import Pagination from "../../components/ui/Pagination.jsx";
+import { useNavigate } from "react-router-dom";
 
-import { useEffect } from "react";
-
-const ProductInformation = () => {
-  const { getAllProductInformation, productInformationList } = productInformationStore();
-
-  useEffect(() => {
-    getAllProductInformation();
-    console.log("Fetching product information...:", productInformationList);
-  }, [getAllProductInformation]);
+const ProductInformationList = () => {
+  const { productInformationList } = productInformationStore();
+  const navigate = useNavigate();
 
   return (
     <MainLayout>
@@ -28,7 +23,9 @@ const ProductInformation = () => {
               </div>
               <button className="flex items-center justify-center gap-2 rounded-lg h-10 px-5 bg-primary hover:bg-blue-600 text-white text-sm font-bold leading-normal tracking-[0.015em] transition-colors shadow-sm">
                 <span className="material-symbols-outlined text-lg">add</span>
-                <span className="truncate">Add Product</span>
+                <span
+                onClick={()=> navigate('/solutions/product-info/create')} 
+                className="truncate">Add Product</span>
               </button>
             </div>
             <FilterAndSearch />
@@ -66,4 +63,4 @@ const ProductInformation = () => {
   );
 };
 
-export default ProductInformation;
+export default ProductInformationList;
