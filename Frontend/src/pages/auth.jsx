@@ -1,24 +1,57 @@
 import { useState } from "react";
 
-import MainLayout from "../components/layout/MainLayout";
+import AuthLayout from "../components/layout/AuthLayout";
 import LoginForm from "../components/auth/LoginForm";
 import SignupForm from "../components/auth/SignupForm";
 import EmailVerificationForm from "../components/auth/EmailVerificationForm";
+import PasswordEmailVerificationForm from "../components/auth/PasswordEmailVerificationForm";
+import ResetPassword from "../components/auth/ResetPassword";
+import ResetPasswordComplete from "../components/auth/ResetPasswodComplete";
 
 const Auth = () => {
   const [authMode, setAuthMode] = useState("login");
+  const [verifyEmail, setVerifyEmail] = useState("");
+
+  const handleSwitch = (mode, payload) => {
+    if (payload?.email) {
+      setVerifyEmail(payload.email);
+    }
+    setAuthMode(mode);
+  };
 
   return (
-    <MainLayout>
-      <div className="max-h-screen flex flex-col items-center mt-30">
-        {authMode === "login" && <LoginForm onSwitch={setAuthMode} />}
-        {authMode === "signup" && <SignupForm onSwitch={setAuthMode} />}
-        {(authMode === "emailVerification" ||
-          authMode === "changePassword") && (
-          <EmailVerificationForm onSwitch={setAuthMode} mode={authMode} />
+    <AuthLayout>
+      <div>
+        {authMode === "login" && <LoginForm onSwitch={handleSwitch} />}
+        {authMode === "signup" && <SignupForm onSwitch={handleSwitch} />}
+        {authMode === "emailVerification" && (
+          <EmailVerificationForm
+            onSwitch={handleSwitch}
+            mode={authMode}
+            email={verifyEmail}
+          />
         )}
+        {authMode === "changePassword" && (
+          <PasswordEmailVerificationForm
+            onSwitch={handleSwitch}
+            mode={authMode}
+          />
+        )}
+        {authMode === "resetPassword" && (
+          <ResetPassword
+            onSwitch={handleSwitch}
+            mode={authMode}
+            email={verifyEmail}
+          />
+        )}
+        {authMode === "passwordResetComplete" && (
+          <ResetPasswordComplete
+            onSwitch={handleSwitch}
+          />
+        )}
+        
       </div>
-    </MainLayout>
+    </AuthLayout>
   );
 };
 

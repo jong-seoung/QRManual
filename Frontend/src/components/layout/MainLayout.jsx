@@ -6,7 +6,7 @@ const MainLayout = ({ children, className = "" }) => {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
 
-      <main className={`flex-1 mt-24 px-4 md:px-10 ${className}`}>
+      <main className={`flex-1 ${className}`}>
         {children}
       </main>
 
