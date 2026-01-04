@@ -5,8 +5,11 @@ import com.QRManual.Backend.productInformation.entity.ProductInformation;
 import com.QRManual.Backend.productInformation.repository.ProductInformationRepository;
 import com.QRManual.Backend.user.dto.UserDto;
 import com.QRManual.Backend.user.entity.User;
+import com.QRManual.Backend.user.repository.CompanyInfoRepository;
 import com.QRManual.Backend.user.service.AuthenticationService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +20,7 @@ import java.util.List;
 public class ProductInformationService {
     private final AuthenticationService authenticationService;
     private final ProductInformationRepository productInformationRepository;
+    private final CompanyInfoRepository companyInfoRepository;
 
     public ProductInformationResponse createProductInformation(ProductInformationRequest request){
         User user = authenticationService.checkCompany();
@@ -57,6 +61,25 @@ public class ProductInformationService {
         return ProductInformationResponse.builder()
                 .id(productInformation.getId())
                 .build();
+    }
+
+    public Page<ProductInformationResponse> getAllProductInformations(Pageable pageable){
+        User user = authenticationService.getCurrentUser();
+        return productInformationRepository
+                .findByDeletedFalse(pageable)
+                .map(ProductInformationResponse::from);
+    }
+
+    public Page<ProductInformationResponse> getCompanyProductInformations(Long companyId, Pageable pageable) {
+        User user = authenticationService.getCurrentUser();
+
+        Long userId = companyInfoRepository.findById(companyId)
+                .orElseThrow(()-> new IllegalArgumentException("요청한 리소스를 찾을 수 없습니다.")).getUser().getId();
+
+        Page<ProductInformation> products =
+                productInformationRepository.findByUserIdAndDeletedFalse(userId, pageable);
+
+        return products.map(ProductInformationResponse::from);
     }
 
     public ProductInformationDetailResponse getProductInformationDetail(Long productInformationId){
