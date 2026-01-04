@@ -22,4 +22,4 @@ RUN chmod +x gradlew
 EXPOSE 8080
 
 # 개발 모드로 Spring Boot 실행 (hot reload 가능)
-ENTRYPOINT ["./gradlew", "bootRun"]
+ENTRYPOINT ["bash", "gradlew", "bootRun"]
