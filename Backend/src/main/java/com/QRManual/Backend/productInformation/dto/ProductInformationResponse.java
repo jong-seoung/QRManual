@@ -5,6 +5,8 @@ import com.QRManual.Backend.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 public class ProductInformationResponse {
@@ -17,6 +19,7 @@ public class ProductInformationResponse {
     private String productPage;
     private String publicStoreLink;
     private boolean deleted;
+    private LocalDateTime createdAt;
 
     public static ProductInformationResponse from(ProductInformation entity) {
         return ProductInformationResponse.builder()
@@ -25,6 +28,7 @@ public class ProductInformationResponse {
                 .name(entity.getName())
                 .modelCode(entity.getModelCode())
                 .releaseYear(entity.getReleaseYear())
+                .createdAt(entity.getCreatedAt())
                 .build();
     }
 }

@@ -19,25 +19,22 @@ public class CustomerServiceService {
     private final CustomerServiceRepository customerServiceRepository;
     private final ProductInformationRepository productInformationRepository;
 
-    public CustomerServiceResponse createCustomerService(CustomerServiceRequest request){
+    @Transactional
+    public CustomerServiceResponse createCustomerService(Long productInformationId, CustomerServiceRequest request){
         User user = authenticationService.checkCompany();
 
-        ProductInformation productInformation = productInformationRepository.findByIdAndDeletedFalse(request.getProductInformation_id())
+        ProductInformation productInformation = productInformationRepository.findByIdAndDeletedFalse(productInformationId)
                 .orElseThrow(()-> new IllegalArgumentException("요청한 리소스를 찾을 수 없습니다."));
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
-        CustomerService customerService = new CustomerService();
-        customerService.setProductInformation(productInformation);
-        customerService.setEmail(request.getEmail());
-        customerService.setPhone(request.getPhone());
-        customerService.setChatLink(request.getChatLink());
-        customerService.setOperationTime(request.getOperationTime());
+        CustomerService customerService =
+                CustomerService.from(productInformation, request);
 
-        CustomerService saved = customerServiceRepository.save(customerService);
+        customerServiceRepository.save(customerService);
 
         return CustomerServiceResponse.builder()
-                .id(saved.getId())
+                .id(customerService.getId())
                 .build();
     }
 
@@ -52,10 +49,7 @@ public class CustomerServiceService {
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
-        customerService.setEmail(request.getEmail());
-        customerService.setPhone(request.getPhone());
-        customerService.setChatLink(request.getChatLink());
-        customerService.setOperationTime(request.getOperationTime());
+        customerService.update(request);
 
         return CustomerServiceResponse.builder()
                 .id(customerService.getId())

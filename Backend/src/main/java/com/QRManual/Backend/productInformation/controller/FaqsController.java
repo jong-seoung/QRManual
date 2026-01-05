@@ -14,9 +14,9 @@ public class FaqsController {
 
     private final FaqService faqService;
 
-    @PostMapping("/create")
-    public FaqResponse createFaq(@RequestBody FaqRequest request){
-        return faqService.createFaq(request);
+    @PostMapping("/create/{productInformationId}")
+    public FaqResponse createFaq(@PathVariable Long productInformationId, @RequestBody FaqRequest request){
+        return faqService.createFaq(productInformationId, request);
     }
 
     @PutMapping("/edit/{faqId}")

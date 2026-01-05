@@ -1,26 +1,35 @@
 package com.QRManual.Backend.productInformation.service;
 
 import com.QRManual.Backend.productInformation.dto.*;
-import com.QRManual.Backend.productInformation.entity.ProductInformation;
-import com.QRManual.Backend.productInformation.repository.ProductInformationRepository;
+import com.QRManual.Backend.productInformation.entity.*;
+import com.QRManual.Backend.productInformation.repository.*;
 import com.QRManual.Backend.user.dto.UserDto;
 import com.QRManual.Backend.user.entity.User;
 import com.QRManual.Backend.user.repository.CompanyInfoRepository;
 import com.QRManual.Backend.user.service.AuthenticationService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class ProductInformationService {
     private final AuthenticationService authenticationService;
     private final ProductInformationRepository productInformationRepository;
     private final CompanyInfoRepository companyInfoRepository;
+
+    private final CustomerServiceRepository customerServiceRepository;
+    private final FaqRepository faqRepository;
+    private final ManualRepository manualRepository;
+    private final PartRepository partRepository;
 
     public ProductInformationResponse createProductInformation(ProductInformationRequest request){
         User user = authenticationService.checkCompany();
@@ -40,6 +49,45 @@ public class ProductInformationService {
         return ProductInformationResponse.builder()
                 .id(saved.getId())
                 .build();
+    }
+
+    @Transactional
+    public Long createSubAll(Long productInformationId, ProductInformationCreateRequest request){
+        ProductInformation productInformation = productInformationRepository.findByIdAndDeletedFalse(productInformationId)
+                .orElseThrow(()-> new IllegalArgumentException("요청한 리소스를 찾을 수 없습니다"));
+
+        if (request.getManuals() != null && !request.getManuals().isEmpty()) {
+            manualRepository.saveAll(
+                    request.getManuals().stream()
+                            .map(m -> Manual.from(productInformation, m))
+                            .toList()
+            );
+        }
+
+        if (request.getFaq() != null && !request.getFaq().isEmpty()) {
+            log.info("FAQ 요청 데이터: {}", request.getFaq());
+            faqRepository.saveAll(
+                    request.getFaq().stream()
+                            .map(f -> Faq.from(productInformation, f))
+                            .toList()
+            );
+        }
+
+        if (request.getParts() != null && !request.getParts().isEmpty()) {
+            partRepository.saveAll(
+                    request.getParts().stream()
+                            .map(p -> Parts.from(productInformation, p))
+                            .toList()
+            );
+        }
+
+        if (request.getCustomerService() != null) {
+            CustomerService customerService =
+                    CustomerService.from(productInformation, request.getCustomerService());
+            customerServiceRepository.save(customerService);
+        }
+
+        return productInformationId;
     }
 
     @Transactional
@@ -63,11 +111,27 @@ public class ProductInformationService {
                 .build();
     }
 
-    public Page<ProductInformationResponse> getAllProductInformations(Pageable pageable){
+    public Page<ProductInformationResponse> getAllProductInformations(int page, int size, String  keyword, String sort){
         User user = authenticationService.getCurrentUser();
-        return productInformationRepository
-                .findByDeletedFalse(pageable)
-                .map(ProductInformationResponse::from);
+
+        Sort sortOption = switch (sort) {
+            case "popular" -> Sort.by(Sort.Direction.DESC, "viewCount");
+            default -> Sort.by(Sort.Direction.DESC, "createdAt");
+        };
+
+        Pageable pageable = PageRequest.of(page, size, sortOption);
+
+        Page<ProductInformation> result;
+
+
+        if (keyword == null || keyword.isBlank()) {
+            result = productInformationRepository.findByDeletedFalse(pageable);
+        } else {
+            result = productInformationRepository
+                    .findByDeletedFalseAndNameContaining(keyword, pageable);
+        }
+
+        return result.map(ProductInformationResponse::from);
     }
 
     public Page<ProductInformationResponse> getCompanyProductInformations(Long companyId, Pageable pageable) {

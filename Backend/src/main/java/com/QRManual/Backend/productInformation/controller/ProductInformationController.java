@@ -1,5 +1,6 @@
 package com.QRManual.Backend.productInformation.controller;
 
+import com.QRManual.Backend.productInformation.dto.ProductInformationCreateRequest;
 import com.QRManual.Backend.productInformation.dto.ProductInformationDetailResponse;
 import com.QRManual.Backend.productInformation.dto.ProductInformationRequest;
 import com.QRManual.Backend.productInformation.dto.ProductInformationResponse;
@@ -23,24 +24,25 @@ public class ProductInformationController {
         return productInformationService.createProductInformation(request);
     }
 
+    @PostMapping("{productInformationId}/create")
+    public Long createSubAll(@PathVariable Long productInformationId, @RequestBody ProductInformationCreateRequest request) {
+        return productInformationService.createSubAll(productInformationId, request);
+    }
+
     @PutMapping("/edit/{productInformationId}")
     public ProductInformationResponse editProductInformation(@PathVariable Long productInformationId, @RequestBody ProductInformationRequest request){
         return productInformationService.editProductInformation(productInformationId, request);
     }
 
-    @PostMapping("/test")
-    public String test() {
-        return "OK12";
-    }
-
     @GetMapping("/list")
     public ResponseEntity<Page<ProductInformationResponse>> getAllProductInformation(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "latest") String sort
     ){
-        Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(
-                productInformationService.getAllProductInformations(pageable)
+                productInformationService.getAllProductInformations(page, size, keyword, sort)
         );
     }
 

@@ -20,23 +20,20 @@ public class FaqService {
     private final FaqRepository faqRepository;
     private final ProductInformationRepository productInformationRepository;
 
-    public FaqResponse createFaq(FaqRequest request){
+    @Transactional
+    public FaqResponse createFaq(Long productInformationId, FaqRequest request){
         User user = authenticationService.checkCompany();
 
-        ProductInformation productInformation = productInformationRepository.findByIdAndDeletedFalse(request.getProductInformation_id())
+        ProductInformation productInformation = productInformationRepository.findByIdAndDeletedFalse(productInformationId)
                 .orElseThrow(()-> new IllegalArgumentException("제품 정보를 찾을 수 없습니다."));
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
-        Faq faq = new Faq();
-        faq.setProductInformation(productInformation);
-        faq.setAnswer(request.getAnswer());
-        faq.setQuestion(request.getQuestion());
-
-        Faq saved = faqRepository.save(faq);
+        Faq faq = Faq.from(productInformation, request);
+        faqRepository.save(faq);
 
         return FaqResponse.builder()
-                .id(saved.getId())
+                .id(faq.getId())
                 .build();
     }
 
@@ -51,8 +48,7 @@ public class FaqService {
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
-        faq.setQuestion(request.getQuestion());
-        faq.setAnswer(request.getAnswer());
+        faq.update(request);
 
         return FaqResponse.builder()
                 .id(faq.getId())

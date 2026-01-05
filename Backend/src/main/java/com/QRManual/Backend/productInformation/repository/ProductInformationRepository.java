@@ -13,4 +13,8 @@ public interface ProductInformationRepository extends JpaRepository<ProductInfor
     Optional<ProductInformation> findByIdAndDeletedFalse(Long id);
     Page<ProductInformation> findByDeletedFalse(Pageable pageable);
     Page<ProductInformation> findByUserIdAndDeletedFalse(Long userId, Pageable pageable);
+    Page<ProductInformation> findByDeletedFalseAndNameContaining(
+            String keyword,
+            Pageable pageable
+    );
 }

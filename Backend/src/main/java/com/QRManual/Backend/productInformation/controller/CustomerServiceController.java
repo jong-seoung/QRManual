@@ -14,9 +14,9 @@ public class CustomerServiceController {
 
     private final CustomerServiceService customerServiceService;
 
-    @PostMapping("/create")
-    public CustomerServiceResponse createCustomerService(@RequestBody CustomerServiceRequest request){
-        return customerServiceService.createCustomerService(request);
+    @PostMapping("/create/{productInformationId}")
+    public CustomerServiceResponse createCustomerService(@PathVariable Long productInformationId, @RequestBody CustomerServiceRequest request){
+        return customerServiceService.createCustomerService(productInformationId, request);
     }
 
     @PutMapping("/edit/{customerServiceId}")

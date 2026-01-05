@@ -1,5 +1,6 @@
 package com.QRManual.Backend.productInformation.entity;
 
+import com.QRManual.Backend.productInformation.dto.ManualRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,4 +34,18 @@ public class Manual {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDate updatedAt;
+
+    public static Manual from(ProductInformation productInformation, ManualRequest req) {
+        Manual manual = new Manual();
+        manual.productInformation = productInformation;
+        manual.language = req.getLanguage();
+        manual.pdfUrl = req.getPdfUrl();
+        return manual;
+    }
+
+    public void update(ManualRequest request) {
+        this.language = request.getLanguage();
+        this.pdfUrl = request.getPdfUrl();
+    }
+
 }

@@ -19,23 +19,20 @@ public class PartService {
     private final PartRepository partRepository;
     private final ProductInformationRepository productInformationRepository;
 
-    public PartsResponse createPart(PartsRequest request){
+    @Transactional
+    public PartsResponse createPart(Long productInformationId, PartsRequest request){
         User user = authenticationService.checkCompany();
 
-        ProductInformation productInformation = productInformationRepository.findByIdAndDeletedFalse(request.getProductInformation_id())
+        ProductInformation productInformation = productInformationRepository.findByIdAndDeletedFalse(productInformationId)
                 .orElseThrow(()-> new IllegalArgumentException("제품 정보를 찾을 수 없습니다."));
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
-        Parts parts = new Parts();
-        parts.setProductInformation(productInformation);
-        parts.setName(request.getName());
-        parts.setStoreLink(request.getStoreLink());
-
-        Parts saved = partRepository.save(parts);
+        Parts parts = Parts.from(productInformation, request);
+        partRepository.save(parts);
 
         return PartsResponse.builder()
-                .id(saved.getId())
+                .id(parts.getId())
                 .build();
     }
 
@@ -50,8 +47,7 @@ public class PartService {
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
-        parts.setName(request.getName());
-        parts.setStoreLink(request.getStoreLink());
+        parts.update(request);
 
         return PartsResponse.builder()
                 .id(parts.getId())

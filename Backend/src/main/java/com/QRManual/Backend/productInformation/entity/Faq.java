@@ -1,5 +1,6 @@
 package com.QRManual.Backend.productInformation.entity;
 
+import com.QRManual.Backend.productInformation.dto.FaqRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,4 +22,17 @@ public class Faq {
 
     private String question;
     private String answer;
+
+    public static Faq from(ProductInformation productInformation, FaqRequest req) {
+        Faq faq = new Faq();
+        faq.productInformation = productInformation;
+        faq.question = req.getQuestion();
+        faq.answer = req.getAnswer();
+        return faq;
+    }
+
+    public void update(FaqRequest request) {
+        this.question = request.getQuestion();
+        this.answer = request.getAnswer();
+    }
 }

@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 public class ManualController {
     private final ManualService manualService;
 
-    @PostMapping("/create")
-    public ManualResponse createManual(@RequestBody ManualRequest request){
-        return manualService.createManual(request);
+    @PostMapping("/create/{productInformationId}")
+    public ManualResponse createManual(@PathVariable Long productInformationId, @RequestBody ManualRequest request){
+        return manualService.createManual(productInformationId, request);
     }
 
     @PutMapping("/edit/{manualId}")

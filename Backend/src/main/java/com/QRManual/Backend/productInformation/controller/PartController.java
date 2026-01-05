@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 public class PartController {
     private final PartService partService;
 
-    @PostMapping("/create")
-    public PartsResponse createPart(@RequestBody PartsRequest request){
-        return partService.createPart(request);
+    @PostMapping("/create/{productInformationId}")
+    public PartsResponse createPart(@PathVariable Long productInformationId, @RequestBody PartsRequest request){
+        return partService.createPart(productInformationId, request);
     }
 
     @PutMapping("/edit/{partId}")
