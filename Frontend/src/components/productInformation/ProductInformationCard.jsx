@@ -1,11 +1,14 @@
-const ProductInformationCard = ({ productInformationList }) => {
+import { useNavigate } from "react-router-dom";
 
-  console.log(productInformationList);
+const ProductInformationCard = ({ productInformationList }) => {
+  const navigate = useNavigate();
+
     return (
     <tbody className="divide-y divide-border-light dark:divide-border-dark">
       {productInformationList.map((item) => (
         <tr
           key={item.id}
+          onClick={()=> navigate('/solutions/product-info/detail/' + item.id)} 
           className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors group"
         >
           {/* 제품 정보 */}

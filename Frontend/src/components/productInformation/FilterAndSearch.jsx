@@ -1,4 +1,9 @@
+import { useState } from "react";
+
 const FilterAndSearch = () => {
+  const [sortBy, setSortBy] = useState("latest");
+  const [open, setOpen] = useState(false);
+
   return (
     <div class="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
       {/* <!-- Search --> */}
@@ -14,31 +19,47 @@ const FilterAndSearch = () => {
           />
         </div>
       </label>
-      <div class="flex gap-2 flex-wrap items-center">
-        <button class="flex h-9 items-center justify-center gap-x-2 rounded-lg bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 pl-4 pr-3 transition-colors">
-          <p class="text-text-main dark:text-white text-sm font-medium leading-normal">
-            Manufacturer
+      <div className="relative flex gap-2 flex-wrap items-center">
+        <button
+          onClick={() => setOpen((prev) => !prev)}
+          className="flex h-9 items-center justify-center gap-x-2 rounded-lg bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 pl-4 pr-3 transition-colors"
+        >
+          <p className="text-text-main dark:text-white text-sm font-medium leading-normal">
+            {sortBy === "latest" ? "최신순" : "인기순"}
           </p>
-          <span class="material-symbols-outlined text-text-secondary text-lg">
+          <span className="material-symbols-outlined text-text-secondary text-lg">
             keyboard_arrow_down
           </span>
         </button>
-        <button class="flex h-9 items-center justify-center gap-x-2 rounded-lg bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 pl-4 pr-3 transition-colors">
-          <p class="text-text-main dark:text-white text-sm font-medium leading-normal">
-            Year
-          </p>
-          <span class="material-symbols-outlined text-text-secondary text-lg">
-            keyboard_arrow_down
-          </span>
-        </button>
-        <button class="flex h-9 items-center justify-center gap-x-2 rounded-lg bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 pl-4 pr-3 transition-colors">
-          <p class="text-text-main dark:text-white text-sm font-medium leading-normal">
-            Badge
-          </p>
-          <span class="material-symbols-outlined text-text-secondary text-lg">
-            keyboard_arrow_down
-          </span>
-        </button>
+        {open && (
+          <div className="absolute top-full left-0 mt-2 w-36 rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-slate-800 shadow-lg z-10">
+            <button
+              onClick={() => {
+                setSortBy("latest");
+                setOpen(false);
+              }}
+              className="flex w-full items-center justify-between px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-slate-700"
+            >
+              최신순
+              {sortBy === "latest" && (
+                <span className="material-symbols-outlined text-sm">check</span>
+              )}
+            </button>
+
+            <button
+              onClick={() => {
+                setSortBy("popular");
+                setOpen(false);
+              }}
+              className="flex w-full items-center justify-between px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-slate-700"
+            >
+              인기순
+              {sortBy === "popular" && (
+                <span className="material-symbols-outlined text-sm">check</span>
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

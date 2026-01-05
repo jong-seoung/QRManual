@@ -22,10 +22,6 @@ const Header = () => {
     navigate(url);
   };
 
-  const handleMypage = () => {
-    navigate("/mypage");
-  };
-
   const handleLogIn = () => {
     if (window.location.pathname === "/auth") {
       window.location.reload();
@@ -85,12 +81,22 @@ const Header = () => {
       <div className="flex gap-3">
         {user ? (
           <>
-            <button
-              onClick={() => navigate("/mypage")}
-              className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-text-main dark:text-white text-sm font-bold leading-normal tracking-[0.015em] transition-colors"
-            >
-              My Page
-            </button>
+            {user.role === "ROLE_USER" && (
+              <button
+                onClick={() => navigate("/mypage")}
+                className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-text-main dark:text-white text-sm font-bold leading-normal tracking-[0.015em] transition-colors"
+              >
+                My Page
+              </button>
+            )}
+            {user.role === "ROLE_COMPANY" && (
+              <button
+                onClick={() => navigate("/company")}
+                className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-text-main dark:text-white text-sm font-bold leading-normal tracking-[0.015em] transition-colors"
+              >
+                Company
+              </button>
+            )}
             <button
               onClick={handleLogout}
               className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-text-main dark:text-white text-sm font-bold leading-normal tracking-[0.015em] transition-colors"
