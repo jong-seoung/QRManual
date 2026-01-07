@@ -26,6 +26,8 @@ public class Manual {
 
     private String language;
     private String pdfUrl;
+    private String originFileName;
+    private String ext;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -40,6 +42,8 @@ public class Manual {
         manual.productInformation = productInformation;
         manual.language = req.getLanguage();
         manual.pdfUrl = req.getPdfUrl();
+        manual.originFileName = req.getOriginFileName();
+        manual.ext = req.getExt();
         return manual;
     }
 

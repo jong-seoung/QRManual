@@ -26,6 +26,7 @@ public class ProductInformation {
     private User user;
 
     private String name;
+    private String imageUrl;
     private String modelCode;
     private Integer releaseYear;
     private String serialNumberLocation;

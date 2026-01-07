@@ -7,4 +7,6 @@ import lombok.Data;
 public class ManualRequest {
     private String language;
     private String pdfUrl;
+    private String originFileName;
+    private String ext;
 }

@@ -10,4 +10,6 @@ public class ManualResponse {
 
     private String language;
     private String pdfUrl;
+    private String originFileName;
+    private String ext;
 }

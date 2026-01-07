@@ -7,4 +7,5 @@ import lombok.Data;
 public class PartsRequest {
     private String name;
     private String storeLink;
+    private String imageUrl;
 }

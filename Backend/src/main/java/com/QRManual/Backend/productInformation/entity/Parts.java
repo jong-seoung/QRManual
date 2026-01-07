@@ -21,6 +21,7 @@ public class Parts {
     private ProductInformation productInformation;
 
     private String name;
+    private String imageUrl;
     private String storeLink;
 
     public static Parts from(ProductInformation productInformation, PartsRequest req) {
@@ -28,6 +29,7 @@ public class Parts {
         parts.productInformation = productInformation;
         parts.name = req.getName();
         parts.storeLink = req.getStoreLink();
+        parts.imageUrl = req.getImageUrl();
         return parts;
     }
 

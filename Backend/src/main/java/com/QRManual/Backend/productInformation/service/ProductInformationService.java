@@ -36,6 +36,7 @@ public class ProductInformationService {
 
         ProductInformation productInformation = new ProductInformation();
         productInformation.setName(request.getName());
+        productInformation.setImageUrl(request.getImageUrl());
         productInformation.setModelCode(request.getModelCode());
         productInformation.setReleaseYear(request.getReleaseYear());
         productInformation.setSerialNumberLocation(request.getSerialNumberLocation());

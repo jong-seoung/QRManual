@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class ProductInformationResponse {
     private Long id;
     private UserDto user;
+    private String imageUrl;
     private String name;
     private String modelCode;
     private Integer releaseYear;

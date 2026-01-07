@@ -10,4 +10,5 @@ public class PartsResponse {
 
     private String name;
     private String storeLink;
+    private String imageUrl;
 }
