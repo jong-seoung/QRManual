@@ -25,6 +25,7 @@ public class ProductInformationResponse {
     public static ProductInformationResponse from(ProductInformation entity) {
         return ProductInformationResponse.builder()
                 .id(entity.getId())
+                .imageUrl(entity.getImageUrl())
                 .user(UserDto.fromEntity(entity.getUser()))
                 .name(entity.getName())
                 .modelCode(entity.getModelCode())

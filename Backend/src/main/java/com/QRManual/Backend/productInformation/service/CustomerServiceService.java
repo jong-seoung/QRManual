@@ -28,14 +28,17 @@ public class CustomerServiceService {
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
-        CustomerService customerService =
-                CustomerService.from(productInformation, request);
-
-        customerServiceRepository.save(customerService);
-
-        return CustomerServiceResponse.builder()
-                .id(customerService.getId())
+        CustomerService customerService = CustomerService.builder()
+                .productInformation(productInformation)
+                .phone(request.getPhone())
+                .email(request.getEmail())
+                .operationTime(request.getOperationTime())
+                .chatLink(request.getChatLink())
                 .build();
+
+        customerService = customerServiceRepository.save(customerService);
+
+        return CustomerServiceResponse.fromEntity(customerService);
     }
 
     @Transactional
@@ -51,9 +54,7 @@ public class CustomerServiceService {
 
         customerService.update(request);
 
-        return CustomerServiceResponse.builder()
-                .id(customerService.getId())
-                .build();
+        return CustomerServiceResponse.fromEntity(customerService);
     }
 
     @Transactional

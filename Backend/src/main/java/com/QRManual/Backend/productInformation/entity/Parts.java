@@ -2,13 +2,13 @@ package com.QRManual.Backend.productInformation.entity;
 
 import com.QRManual.Backend.productInformation.dto.PartsRequest;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@Getter
-@Setter
+@Table
+@Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Parts {
 
@@ -23,15 +23,6 @@ public class Parts {
     private String name;
     private String imageUrl;
     private String storeLink;
-
-    public static Parts from(ProductInformation productInformation, PartsRequest req) {
-        Parts parts = new Parts();
-        parts.productInformation = productInformation;
-        parts.name = req.getName();
-        parts.storeLink = req.getStoreLink();
-        parts.imageUrl = req.getImageUrl();
-        return parts;
-    }
 
     public void update(PartsRequest request) {
         this.name = request.getName();

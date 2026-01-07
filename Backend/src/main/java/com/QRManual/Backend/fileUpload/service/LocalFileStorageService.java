@@ -17,6 +17,9 @@ public class LocalFileStorageService implements FileStorageService{
     @Value("${file.upload.path}")
     private String uploadPath;
 
+    @Value("${backend.url}")
+    private String backendUrl;
+
     @Override
     public String upload(MultipartFile file, String dirName) {
         try {
@@ -31,7 +34,7 @@ public class LocalFileStorageService implements FileStorageService{
             Files.copy(file.getInputStream(), filePath);
 
             // DB에 저장할 경로
-            return "/" + dirName + "/" + savedFileName;
+            return backendUrl + "/uploads/" + dirName + "/" + savedFileName;
 
         } catch (Exception e) {
             throw new RuntimeException("파일 저장 실패", e);

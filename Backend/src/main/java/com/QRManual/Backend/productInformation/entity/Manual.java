@@ -2,17 +2,17 @@ package com.QRManual.Backend.productInformation.entity;
 
 import com.QRManual.Backend.productInformation.dto.ManualRequest;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
+@Table
+@Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Manual {
 
@@ -36,16 +36,6 @@ public class Manual {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDate updatedAt;
-
-    public static Manual from(ProductInformation productInformation, ManualRequest req) {
-        Manual manual = new Manual();
-        manual.productInformation = productInformation;
-        manual.language = req.getLanguage();
-        manual.pdfUrl = req.getPdfUrl();
-        manual.originFileName = req.getOriginFileName();
-        manual.ext = req.getExt();
-        return manual;
-    }
 
     public void update(ManualRequest request) {
         this.language = request.getLanguage();

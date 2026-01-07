@@ -29,12 +29,17 @@ public class ManualService {
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
-        Manual manual = Manual.from(productInformation, request);
-        manualRepository.save(manual);
-
-        return ManualResponse.builder()
-                .id(manual.getId())
+        Manual manual = Manual.builder()
+                .productInformation(productInformation)
+                .language(request.getLanguage())
+                .pdfUrl(request.getPdfUrl())
+                .originFileName(request.getOriginFileName())
+                .ext(request.getExt())
                 .build();
+
+        manual = manualRepository.save(manual);
+
+        return ManualResponse.fromEntity(manual);
     }
 
     @Transactional
@@ -50,9 +55,7 @@ public class ManualService {
 
         manual.update(request);
 
-        return ManualResponse.builder()
-                .id(manual.getId())
-                .build();
+        return ManualResponse.fromEntity(manual);
     }
 
     @Transactional

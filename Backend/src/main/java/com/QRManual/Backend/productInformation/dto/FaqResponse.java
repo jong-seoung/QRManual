@@ -1,5 +1,7 @@
 package com.QRManual.Backend.productInformation.dto;
 
+import com.QRManual.Backend.productInformation.entity.Faq;
+import com.QRManual.Backend.productInformation.entity.ProductInformation;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,4 +12,13 @@ public class FaqResponse {
 
     private String question;
     private String answer;
+
+    public static FaqResponse fromEntity(Faq faq) {
+        return FaqResponse.builder()
+                .id(faq.getId())
+                .question(faq.getQuestion())
+                .answer(faq.getAnswer())
+                .build();
+    }
+
 }

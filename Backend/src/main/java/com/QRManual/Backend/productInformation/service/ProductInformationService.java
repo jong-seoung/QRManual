@@ -26,10 +26,10 @@ public class ProductInformationService {
     private final ProductInformationRepository productInformationRepository;
     private final CompanyInfoRepository companyInfoRepository;
 
-    private final CustomerServiceRepository customerServiceRepository;
-    private final FaqRepository faqRepository;
-    private final ManualRepository manualRepository;
-    private final PartRepository partRepository;
+    private final CustomerServiceService customerServiceService;
+    private final FaqService faqService;
+    private final ManualService manualService;
+    private final PartService partService;
 
     public ProductInformationResponse createProductInformation(ProductInformationRequest request){
         User user = authenticationService.checkCompany();
@@ -54,38 +54,29 @@ public class ProductInformationService {
 
     @Transactional
     public Long createSubAll(Long productInformationId, ProductInformationCreateRequest request){
-        ProductInformation productInformation = productInformationRepository.findByIdAndDeletedFalse(productInformationId)
+         productInformationRepository.findByIdAndDeletedFalse(productInformationId)
                 .orElseThrow(()-> new IllegalArgumentException("요청한 리소스를 찾을 수 없습니다"));
 
         if (request.getManuals() != null && !request.getManuals().isEmpty()) {
-            manualRepository.saveAll(
-                    request.getManuals().stream()
-                            .map(m -> Manual.from(productInformation, m))
-                            .toList()
+            request.getManuals().forEach(manual ->
+                    manualService.createManual(productInformationId, manual)
             );
         }
 
         if (request.getFaq() != null && !request.getFaq().isEmpty()) {
-            log.info("FAQ 요청 데이터: {}", request.getFaq());
-            faqRepository.saveAll(
-                    request.getFaq().stream()
-                            .map(f -> Faq.from(productInformation, f))
-                            .toList()
+            request.getFaq().forEach(faq ->
+                    faqService.createFaq(productInformationId, faq)
             );
         }
 
         if (request.getParts() != null && !request.getParts().isEmpty()) {
-            partRepository.saveAll(
-                    request.getParts().stream()
-                            .map(p -> Parts.from(productInformation, p))
-                            .toList()
+            request.getParts().forEach(part ->
+                    partService.createPart(productInformationId, part)
             );
         }
 
         if (request.getCustomerService() != null) {
-            CustomerService customerService =
-                    CustomerService.from(productInformation, request.getCustomerService());
-            customerServiceRepository.save(customerService);
+            customerServiceService.createCustomerService(productInformationId, request.getCustomerService());
         }
 
         return productInformationId;
@@ -112,7 +103,7 @@ public class ProductInformationService {
                 .build();
     }
 
-    public Page<ProductInformationResponse> getAllProductInformations(int page, int size, String  keyword, String sort){
+    public Page<ProductInformationResponse> getAllProductInformation(int page, int size, String  keyword, String sort){
         User user = authenticationService.getCurrentUser();
 
         Sort sortOption = switch (sort) {
@@ -135,7 +126,7 @@ public class ProductInformationService {
         return result.map(ProductInformationResponse::from);
     }
 
-    public Page<ProductInformationResponse> getCompanyProductInformations(Long companyId, Pageable pageable) {
+    public Page<ProductInformationResponse> getCompanyProductInformation(Long companyId, Pageable pageable) {
         User user = authenticationService.getCurrentUser();
 
         Long userId = companyInfoRepository.findById(companyId)
@@ -156,6 +147,7 @@ public class ProductInformationService {
         ProductInformationResponse productInformation = ProductInformationResponse.builder()
                 .id(product.getId())
                 .user(UserDto.fromEntity(product.getUser()))
+                .imageUrl(product.getImageUrl())
                 .name(product.getName())
                 .modelCode(product.getModelCode())
                 .releaseYear(product.getReleaseYear())
@@ -165,38 +157,20 @@ public class ProductInformationService {
                 .build();
 
         List<ManualResponse> manuals = product.getManuals().stream()
-                .map(manual -> ManualResponse.builder()
-                        .id(manual.getId())
-                        .language(manual.getLanguage())
-                        .pdfUrl(manual.getPdfUrl())
-                        .build())
+                .map(ManualResponse::fromEntity)
                 .toList();
 
         List<PartsResponse> parts = product.getPartsList().stream()
-                .map(part -> PartsResponse.builder()
-                        .id(part.getId())
-                        .name(part.getName())
-                        .storeLink(part.getStoreLink())
-                        .build())
+                .map(PartsResponse::fromEntity)
                 .toList();
 
         List<FaqResponse> faqs = product.getFaqs().stream()
-                .map(faq -> FaqResponse.builder()
-                        .id(faq.getId())
-                        .question(faq.getQuestion())
-                        .answer(faq.getAnswer())
-                        .build())
+                .map(FaqResponse::fromEntity)
                 .toList();
 
         CustomerServiceResponse customerService = null;
         if (product.getCustomerService() != null) {
-            customerService = CustomerServiceResponse.builder()
-                    .id(product.getCustomerService().getId())
-                    .phone(product.getCustomerService().getPhone())
-                    .email(product.getCustomerService().getEmail())
-                    .operationTime(product.getCustomerService().getOperationTime())
-                    .chatLink(product.getCustomerService().getChatLink())
-                    .build();
+            customerService = CustomerServiceResponse.fromEntity(product.getCustomerService());
         }
 
         // 6. 최종 응답 조립

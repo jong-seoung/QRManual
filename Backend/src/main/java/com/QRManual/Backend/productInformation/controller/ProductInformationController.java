@@ -42,7 +42,7 @@ public class ProductInformationController {
             @RequestParam(defaultValue = "latest") String sort
     ){
         return ResponseEntity.ok(
-                productInformationService.getAllProductInformations(page, size, keyword, sort)
+                productInformationService.getAllProductInformation(page, size, keyword, sort)
         );
     }
 
@@ -54,7 +54,7 @@ public class ProductInformationController {
     ) {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(
-                productInformationService.getCompanyProductInformations(companyId, pageable)
+                productInformationService.getCompanyProductInformation(companyId, pageable)
         );
     }
 

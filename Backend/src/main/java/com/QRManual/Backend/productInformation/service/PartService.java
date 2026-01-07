@@ -28,12 +28,16 @@ public class PartService {
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
-        Parts parts = Parts.from(productInformation, request);
-        partRepository.save(parts);
-
-        return PartsResponse.builder()
-                .id(parts.getId())
+        Parts parts = Parts.builder()
+                .productInformation(productInformation)
+                .name(request.getName())
+                .storeLink(request.getStoreLink())
+                .imageUrl(request.getImageUrl())
                 .build();
+
+        parts = partRepository.save(parts);
+
+        return PartsResponse.fromEntity(parts);
     }
 
     @Transactional
@@ -49,9 +53,7 @@ public class PartService {
 
         parts.update(request);
 
-        return PartsResponse.builder()
-                .id(parts.getId())
-                .build();
+        return PartsResponse.fromEntity(parts);
     }
 
     @Transactional

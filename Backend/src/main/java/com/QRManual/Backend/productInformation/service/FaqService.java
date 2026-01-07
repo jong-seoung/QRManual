@@ -29,12 +29,15 @@ public class FaqService {
 
         authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
 
-        Faq faq = Faq.from(productInformation, request);
-        faqRepository.save(faq);
-
-        return FaqResponse.builder()
-                .id(faq.getId())
+        Faq faq = Faq.builder()
+                .productInformation(productInformation)
+                .question(request.getQuestion())
+                .answer(request.getAnswer())
                 .build();
+
+        faq = faqRepository.save(faq);
+
+        return FaqResponse.fromEntity(faq);
     }
 
     @Transactional
@@ -50,9 +53,7 @@ public class FaqService {
 
         faq.update(request);
 
-        return FaqResponse.builder()
-                .id(faq.getId())
-                .build();
+        return FaqResponse.fromEntity(faq);
     }
 
     @Transactional
