@@ -1,34 +1,27 @@
 import { useState } from "react";
 
-const FaqForm = ({ onChange }) => {
-  const [faqs, setFaqs] = useState([{ question: "", answer: "" }]);
+const FaqForm = ({ value, onChange }) => {
+  const faqs = value ?? [{ id: null, question: "", answer: "" }];
 
   const addFaq = () => {
-    setFaqs((prev) => {
-      const updated = [...prev, { question: "", answer: "" }];
-      onChange?.(updated);
-      return updated;
-    });
+    const updated = [...faqs, { id: null, question: "", answer: "" }];
+
+    onChange?.(updated);
   };
 
   const removeFaq = (index) => {
-    setFaqs((prev) => {
-      const updated = prev.filter((_, i) => i !== index);
-      onChange?.(updated);
-      return updated;
-    });
+    const updated = faqs.filter((_, i) => i !== index);
+    onChange?.(updated);
   };
 
   const handleItemChange = (index, e) => {
     const { name, value } = e.target;
 
-    setFaqs((prev) => {
-      const updated = prev.map((item, i) =>
-        i === index ? { ...item, [name]: value } : item
-      );
-      onChange?.(updated);
-      return updated;
-    });
+    const updated = faqs.map((item, i) =>
+      i === index ? { ...item, [name]: value } : item
+    );
+
+    onChange?.(updated);
   };
 
   return (

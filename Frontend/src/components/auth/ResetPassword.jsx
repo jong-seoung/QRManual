@@ -110,18 +110,18 @@ const ChangePassword = ({ onSwitch, mode, email }) => {
   };
 
   return (
-    <main class="flex-1 flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-      <div class="w-full max-w-lg">
+    <main className="flex-1 flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+      <div className="w-full max-w-lg">
         {/* <!-- Card --> */}
-        <div class="bg-white dark:bg-[#1a222d] shadow-lg rounded-xl border border-[#e5e7eb] dark:border-[#2a3441] overflow-hidden">
+        <div className="bg-white dark:bg-[#1a222d] shadow-lg rounded-xl border border-[#e5e7eb] dark:border-[#2a3441] overflow-hidden">
           {/* <!-- Header Section --> */}
-          <div class="p-8 pb-4">
-            <h1 class="text-[#111418] dark:text-white tracking-tight text-[28px] font-bold leading-tight mb-3">
+          <div className="p-8 pb-4">
+            <h1 className="text-[#111418] dark:text-white tracking-tight text-[28px] font-bold leading-tight mb-3">
               Reset Password
             </h1>
-            <p class="text-[#617589] dark:text-[#94a3b8] text-sm font-normal leading-relaxed">
+            <p className="text-[#617589] dark:text-[#94a3b8] text-sm font-normal leading-relaxed">
               We sent a 8-digit code to{" "}
-              <span class="font-semibold text-[#111418] dark:text-gray-200">
+              <span className="font-semibold text-[#111418] dark:text-gray-200">
                 {formData.email || "your email address"}
               </span>
               . Please enter it below along with your new password to secure
@@ -129,10 +129,10 @@ const ChangePassword = ({ onSwitch, mode, email }) => {
             </p>
           </div>
           {/* <!-- Form Section --> */}
-          <div class="px-8 pb-8 space-y-6">
+          <div className="px-8 pb-8 space-y-6">
             {/* <!-- Verification Code Input --> */}
             <div>
-              <label class="block text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal mb-3">
+              <label className="block text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal mb-3">
                 Verification Code
               </label>
               {/* <!-- OTP Inputs --> */}
@@ -154,20 +154,20 @@ const ChangePassword = ({ onSwitch, mode, email }) => {
                   />
                 ))}
               </div>
-              <div class="mt-3 flex justify-end">
+              <div className="mt-3 flex justify-end">
                 <button
                   onClick={SendEmailHandle}
-                  class="text-primary hover:text-blue-600 dark:hover:text-blue-400 text-sm font-medium transition-colors"
+                  className="text-primary hover:text-blue-600 dark:hover:text-blue-400 text-sm font-medium transition-colors"
                 >
                   Didn't receive the email? Resend Code
                 </button>
               </div>
 
               {!verified && (
-                <div class="pt-2">
+                <div className="pt-2">
                   <button
                     onClick={VerifyhandleSubmit}
-                    class="w-full h-12 flex items-center justify-center rounded-lg bg-primary hover:bg-[#106cd0] text-white text-base font-bold shadow-sm transition-all focus:ring-4 focus:ring-primary/30"
+                    className="w-full h-12 flex items-center justify-center rounded-lg bg-primary hover:bg-[#106cd0] text-white text-base font-bold shadow-sm transition-all focus:ring-4 focus:ring-primary/30"
                   >
                     인증하기
                   </button>
@@ -177,16 +177,16 @@ const ChangePassword = ({ onSwitch, mode, email }) => {
             {verified && (
               <>
                 {/* Password Fields */}
-                <div class="space-y-5">
+                <div className="space-y-5">
                   {/* New Password */}
                   <div>
-                    <label class="block text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal mb-2">
+                    <label className="block text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal mb-2">
                       New Password
                     </label>
 
                     <input
                       type="password"
-                      class="w-full h-12 rounded-lg border border-[#dbe0e6] dark:border-[#3e4c5e] bg-white dark:bg-[#151b23] px-4 pr-12 text-[#111418] dark:text-white placeholder-[#617589] dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all text-base"
+                      className="w-full h-12 rounded-lg border border-[#dbe0e6] dark:border-[#3e4c5e] bg-white dark:bg-[#151b23] px-4 pr-12 text-[#111418] dark:text-white placeholder-[#617589] dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all text-base"
                       placeholder="Min. 8 characters"
                       onChange={(e) =>
                         setFormData((prev) => ({
@@ -199,12 +199,12 @@ const ChangePassword = ({ onSwitch, mode, email }) => {
 
                   {/* Confirm Password */}
                   <div>
-                    <label class="block text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal mb-2">
+                    <label className="block text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal mb-2">
                       New Password Confirm New Password
                     </label>
                     <input
                       type="password"
-                      class="w-full h-12 rounded-lg border border-[#dbe0e6] dark:border-[#3e4c5e] bg-white dark:bg-[#151b23] px-4 pr-12 text-[#111418] dark:text-white placeholder-[#617589] dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all text-base"
+                      className="w-full h-12 rounded-lg border border-[#dbe0e6] dark:border-[#3e4c5e] bg-white dark:bg-[#151b23] px-4 pr-12 text-[#111418] dark:text-white placeholder-[#617589] dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all text-base"
                       placeholder="Re-enter password"
                       onChange={(e) =>
                         setFormData((prev) => ({
@@ -217,10 +217,10 @@ const ChangePassword = ({ onSwitch, mode, email }) => {
                 </div>
 
                 {/* Reset Button */}
-                <div class="pt-2">
+                <div className="pt-2">
                   <button
                     onClick={PasswordhandleSubmit}
-                    class="w-full h-12 rounded-lg bg-primary text-white font-bold"
+                    className="w-full h-12 rounded-lg bg-primary text-white font-bold"
                   >
                     Reset Password
                   </button>
@@ -230,12 +230,12 @@ const ChangePassword = ({ onSwitch, mode, email }) => {
           </div>
         </div>
         {/* <!-- Footer Link --> */}
-        <div class="mt-6 text-center">
+        <div className="mt-6 text-center">
           <a
-            class="inline-flex items-center gap-2 text-sm font-medium text-[#617589] dark:text-[#94a3b8] hover:text-[#111418] dark:hover:text-white transition-colors group"
+            className="inline-flex items-center gap-2 text-sm font-medium text-[#617589] dark:text-[#94a3b8] hover:text-[#111418] dark:hover:text-white transition-colors group"
             href="#"
           >
-            <span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">
+            <span className="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">
               arrow_back
             </span>
             Return to Login

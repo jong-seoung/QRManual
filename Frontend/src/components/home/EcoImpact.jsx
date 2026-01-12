@@ -6,7 +6,8 @@ const EcoImpact = () => {
         <div className="absolute top-0 right-0 w-64 h-64 bg-green-200/50 dark:bg-green-800/20 rounded-full blur-3xl -z-10 transform translate-x-1/2 -translate-y-1/2"></div>
         <div className="w-full md:w-1/2 flex flex-col gap-6">
           <div className="inline-flex items-center gap-2 text-green-700 dark:text-green-400 font-bold uppercase tracking-wider text-sm">
-            <span className="material-symbols-outlined">eco</span> Sustainability
+            <span className="material-symbols-outlined">eco</span>{" "}
+            Sustainability
           </div>
           <h2 className="text-3xl md:text-5xl font-black text-text-main dark:text-white leading-tight">
             Save money.
@@ -23,7 +24,7 @@ const EcoImpact = () => {
               <p className="text-3xl font-black text-green-600 dark:text-green-400">
                 40%
               </p>
-              <p classNameName="text-sm text-text-light dark:text-slate-400">
+              <p className="text-sm text-text-light dark:text-slate-400">
                 Printing Cost Reduction
               </p>
             </div>
@@ -43,8 +44,8 @@ const EcoImpact = () => {
               className="absolute inset-0 bg-cover bg-center"
               data-alt="Abstract green leaves and technology mesh pattern representing eco-friendly tech"
               style={{
-                    backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuDZwyu4u5-XNjSMcVYLzVNHFvrAEtjvJQmPZR4P_Qe3xtMJl5wjanWoVPrE2ipx-f7Xy3-oT8IvY8PfvmpPR9raNT0DL7H9R-O1mXbBr5bWAQHCEfGCcmk-2-_aaRxyz7JO1ejnYGA9ZrB8a7NP6sCb0WH-qOjo2XHUPgS70cFoD7A28IbZ-1yeTghrTWJr-ntTR7c5HsCAOzv_7UNUlJtD2lI5z8xxeTthb6XDA1h-4mXbrYB1-Evgiw-GysizVFCK7o4rgiLcY1M")`,
-                  }}
+                backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuDZwyu4u5-XNjSMcVYLzVNHFvrAEtjvJQmPZR4P_Qe3xtMJl5wjanWoVPrE2ipx-f7Xy3-oT8IvY8PfvmpPR9raNT0DL7H9R-O1mXbBr5bWAQHCEfGCcmk-2-_aaRxyz7JO1ejnYGA9ZrB8a7NP6sCb0WH-qOjo2XHUPgS70cFoD7A28IbZ-1yeTghrTWJr-ntTR7c5HsCAOzv_7UNUlJtD2lI5z8xxeTthb6XDA1h-4mXbrYB1-Evgiw-GysizVFCK7o4rgiLcY1M")`,
+              }}
             ></div>
           </div>
         </div>

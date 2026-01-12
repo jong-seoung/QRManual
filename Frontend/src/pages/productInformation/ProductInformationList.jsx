@@ -1,19 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-import MainLayout from "../../components/layout/MainLayout";
+import MainLayout from "../../components/layout/MainLayout.jsx";
 import FilterAndSearch from "../../components/productInformation/filterAndSearch.jsx";
 import ProductInformationCard from "../../components/productInformation/ProductInformationCard.jsx";
-import productInformationStore from "../../store/productInformationStore";
+import productInformationStore from "../../store/productInformationStore.js";
 import Pagination from "../../components/ui/Pagination.jsx";
 
 const ProductInformationList = () => {
-  const { getAllProductInformation, productInformationList } = productInformationStore();
+  const {
+    page,
+    size,
+    totalPages,
+    totalElements,
+    first,
+    last,
+    productInformationList,
+    setPage,
+    getAllProductInformation,
+  } = productInformationStore();
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAllProductInformation(0, 8);
-
+    getAllProductInformation(page, size);
   }, [getAllProductInformation]);
 
   return (
@@ -31,8 +41,11 @@ const ProductInformationList = () => {
               <button className="flex items-center justify-center gap-2 rounded-lg h-10 px-5 bg-primary hover:bg-blue-600 text-white text-sm font-bold leading-normal tracking-[0.015em] transition-colors shadow-sm">
                 <span className="material-symbols-outlined text-lg">add</span>
                 <span
-                onClick={()=> navigate('/solutions/product-info/create')} 
-                className="truncate">Add Product</span>
+                  onClick={() => navigate("/solutions/product-info/create")}
+                  className="truncate"
+                >
+                  Add Product
+                </span>
               </button>
             </div>
             <FilterAndSearch />
@@ -52,15 +65,25 @@ const ProductInformationList = () => {
                         <th className="px-6 py-4 text-left text-text-secondary dark:text-gray-300 text-xs font-semibold uppercase tracking-wider w-[15%]">
                           Year
                         </th>
-                        <th className="px-6 py-4 text-right text-text-secondary dark:text-gray-300 text-xs font-semibold uppercase tracking-wider w-[20%]">
+                        <th className="px-6 py-4 text-center text-text-secondary dark:text-gray-300 text-xs font-semibold uppercase tracking-wider w-[20%]">
                           Save User
                         </th>
                       </tr>
                     </thead>
-                    <ProductInformationCard productInformationList={productInformationList} />
+                    <ProductInformationCard
+                      productInformationList={productInformationList}
+                    />
                   </table>
                 </div>
-                <Pagination />
+                <Pagination
+                  page={page}
+                  size={size}
+                  totalPages={totalPages}
+                  totalElements={totalElements}
+                  first={first}
+                  last={last}
+                  onChangePage={(p) => setPage(p)}
+                />
               </div>
             </div>
           </div>

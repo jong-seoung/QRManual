@@ -14,6 +14,8 @@ const productInformationStore = create((set) => ({
   loading: false,
   error: null,
 
+  setPage: (page) => set({ page }),
+
   createProductInformation: async (data) =>
     asyncHandler(set, async () => {
       const response = await productInformationService.createProductInformation(
@@ -22,9 +24,9 @@ const productInformationStore = create((set) => ({
       return response.data;
     }),
 
-  createProductSubAll: async (productInformation_id, data) =>
+  updateProductInformation: async (productInformation_id, data) =>
     asyncHandler(set, async () => {
-      const response = await productInformationService.createProductSubAll(
+      const response = await productInformationService.updateProductInformation(
         productInformation_id,
         data
       );
@@ -51,9 +53,32 @@ const productInformationStore = create((set) => ({
       return response.data.content;
     }),
 
+  getAllProductInformationByCompanyId: async (page = 0, size = 8, id) =>
+    asyncHandler(set, async () => {
+      const response =
+        await productInformationService.getAllProductInformationByCompanyId(
+          page,
+          size,
+          id
+        );
+
+      set({
+        productInformationList: response.data.content,
+        page: response.data.number,
+        size: response.data.size,
+        totalPages: response.data.totalPages,
+        totalElements: response.data.totalElements,
+        first: response.data.first,
+        last: response.data.last,
+      });
+
+      return response.data.content;
+    }),
+
   getProductInformationById: async (id) =>
     asyncHandler(set, async () => {
-      const response = await productInformationService.getProductInformationById(id);
+      const response =
+        await productInformationService.getProductInformationById(id);
       set({ ProductInformationById: response.data });
       return response.data;
     }),

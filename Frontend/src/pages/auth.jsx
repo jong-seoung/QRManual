@@ -45,11 +45,8 @@ const Auth = () => {
           />
         )}
         {authMode === "passwordResetComplete" && (
-          <ResetPasswordComplete
-            onSwitch={handleSwitch}
-          />
+          <ResetPasswordComplete onSwitch={handleSwitch} />
         )}
-        
       </div>
     </AuthLayout>
   );

@@ -143,7 +143,9 @@ const LoginLeft = ({ onSwitch }) => {
         className="flex flex-col sm:flex-row gap-3"
       >
         <button className="flex-1 flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-white dark:bg-[#111418] border border-[#dbe0e6] dark:border-[#3e4856] text-[#111418] dark:text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#f8f9fa] dark:hover:bg-[#2a3441] transition-colors">
-          <span className="material-symbols-outlined text-[18px]">grid_view</span>
+          <span className="material-symbols-outlined text-[18px]">
+            grid_view
+          </span>
           <span className="truncate">Kakao</span>
         </button>
         <button

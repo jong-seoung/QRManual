@@ -197,7 +197,7 @@ const SignupForm = ({ onSwitch }) => {
                 Register this account for your organization
               </span>
             </div>
-            <label classNameName="flex items-center gap-2 cursor-pointer">
+            <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
                 name="isCompany"
@@ -208,10 +208,9 @@ const SignupForm = ({ onSwitch }) => {
                     Role: e.target.checked ? "ROLE_COMPANY" : "ROLE_USER",
                   })
                 }
-                classNameName="w-4 h-4"
+                className="w-4 h-4"
               />
-              <span classNameName="text-sm text-gray-700 dark:text-gray-300">
-              </span>
+              <span className="text-sm text-gray-700 dark:text-gray-300"></span>
             </label>
           </div>
           {/* <!-- Submit Button --> */}

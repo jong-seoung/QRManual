@@ -1,20 +1,20 @@
 import { useState } from "react";
 
-const CustomerServiceForm = ({ onChange }) => {
-  const [customerService, setCustomerService] = useState({
+const CustomerServiceForm = ({ value, onChange }) => {
+  const customerService = value ?? {
+    id: null,
     phone: "",
     email: "",
     operationTime: "",
     chatLink: "",
-  });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setCustomerService((prev) => {
-      const updated = { ...prev, [name]: value };
-      onChange?.(updated);
-      return updated;
+    onChange({
+      ...customerService,
+      [name]: value,
     });
   };
 
@@ -36,7 +36,7 @@ const CustomerServiceForm = ({ onChange }) => {
             Live Chat Link
           </label>
           <div className="relative">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none material-symbols-outlined text-slate-400 text-[18px]">
+            <span className="absolute inset-y-2.5 left-0 pl-2 flex items-center pointer-events-none material-symbols-outlined text-slate-400 text-[18px]">
               chat
             </span>
             <input
@@ -56,7 +56,7 @@ const CustomerServiceForm = ({ onChange }) => {
             Support Email
           </label>
           <div className="relative">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none material-symbols-outlined text-slate-400 text-[18px]">
+            <span className="absolute inset-y-2.5 left-0 pl-2 flex items-center pointer-events-none material-symbols-outlined text-slate-400 text-[18px]">
               mail
             </span>
             <input
@@ -76,7 +76,7 @@ const CustomerServiceForm = ({ onChange }) => {
             Phone Number
           </label>
           <div className="relative">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none material-symbols-outlined text-slate-400 text-[18px]">
+            <span className="absolute inset-y-2.5 left-0 pl-2 flex items-center pointer-events-none material-symbols-outlined text-slate-400 text-[18px]">
               call
             </span>
             <input
@@ -96,7 +96,7 @@ const CustomerServiceForm = ({ onChange }) => {
             Operation Time
           </label>
           <div className="relative">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none material-symbols-outlined text-slate-400 text-[18px]">
+            <span className="absolute inset-y-2.5 left-0 pl-2 flex items-center pointer-events-none material-symbols-outlined text-slate-400 text-[18px]">
               schedule
             </span>
             <input

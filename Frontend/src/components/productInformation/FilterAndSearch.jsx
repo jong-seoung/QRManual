@@ -5,15 +5,15 @@ const FilterAndSearch = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div class="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
+    <div className="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
       {/* <!-- Search --> */}
-      <label class="flex flex-col h-10 w-full md:w-80 lg:w-96">
-        <div class="flex w-full flex-1 items-stretch rounded-lg h-full border border-border-light dark:border-border-dark overflow-hidden focus-within:ring-2 focus-within:ring-primary/50 transition-shadow">
-          <div class="text-text-secondary dark:text-gray-400 flex bg-surface-light dark:bg-surface-dark items-center justify-center pl-3 border-r-0">
-            <span class="material-symbols-outlined">search</span>
+      <label className="flex flex-col h-10 w-full md:w-80 lg:w-96">
+        <div className="flex w-full flex-1 items-stretch rounded-lg h-full border border-border-light dark:border-border-dark overflow-hidden focus-within:ring-2 focus-within:ring-primary/50 transition-shadow">
+          <div className="text-text-secondary dark:text-gray-400 flex bg-surface-light dark:bg-surface-dark items-center justify-center pl-3 border-r-0">
+            <span className="material-symbols-outlined">search</span>
           </div>
           <input
-            class="flex w-full min-w-0 flex-1 resize-none border-none bg-surface-light dark:bg-surface-dark text-text-main dark:text-white focus:outline-0 h-full placeholder:text-text-secondary dark:placeholder:text-gray-500 px-3 text-sm font-normal leading-normal"
+            className="flex w-full min-w-0 flex-1 resize-none border-none bg-surface-light dark:bg-surface-dark text-text-main dark:text-white focus:outline-0 h-full placeholder:text-text-secondary dark:placeholder:text-gray-500 px-3 text-sm font-normal leading-normal"
             placeholder="Search by name, model, or SKU..."
             value=""
           />

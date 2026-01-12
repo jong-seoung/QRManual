@@ -1,34 +1,46 @@
 import { useState } from "react";
+import ImageUpload from "../ui/ImageUpload";
 
-const PartsForm = ({ onChange }) => {
-  const [parts, setParts] = useState([{ name: "", storeLink: "" }]);
+const PartsForm = ({ value, onChange }) => {
+  const parts = value ?? [
+    { id: "", name: "", storeLink: "", imageUrl: null, imageFile: null },
+  ];
 
   const addPart = () => {
-    setParts((prev) => {
-      const updated = [...prev, { name: "", storeLink: "" }];
-      onChange?.(updated);
-      return updated;
-    });
+    const updated = [
+      ...parts,
+      { id: "", name: "", storeLink: "", imageUrl: null, imageFile: null },
+    ];
+
+    onChange?.(updated);
   };
 
   const removePart = (index) => {
-    setParts((prev) => {
-      const updated = prev.filter((_, i) => i !== index);
-      onChange?.(updated);
-      return updated;
-    });
+    const updated = parts.filter((_, i) => i !== index);
+    onChange?.(updated);
   };
 
   const handleItemChange = (index, e) => {
     const { name, value } = e.target;
 
-    setParts((prev) => {
-      const updated = prev.map((item, i) =>
-        i === index ? { ...item, [name]: value } : item
-      );
-      onChange?.(updated);
-      return updated;
-    });
+    const updated = parts.map((item, i) =>
+      i === index ? { ...item, [name]: value } : item
+    );
+
+    onChange?.(updated);
+  };
+
+  const handleImageChange = (index, file) => {
+    const updated = parts.map((item, i) =>
+      i === index
+        ? {
+            ...item,
+            imageFile: file,
+          }
+        : item
+    );
+
+    onChange?.(updated);
   };
 
   return (
@@ -54,36 +66,44 @@ const PartsForm = ({ onChange }) => {
         {parts.map((part, index) => (
           <div
             key={index}
-            className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700"
+            className="flex flex-row gap-1 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700"
           >
-            <div className="flex justify-between items-start mb-2">
+            <ImageUpload
+              value={part.imageUrl}
+              onChange={(file) => handleImageChange(index, file)}
+              width={80}
+              height={80}
+            />
+            <div className="flex flex-col justify-center flex-1">
+              <div className="flex justify-between items-start mb-2">
+                <input
+                  name="name"
+                  value={part.name}
+                  onChange={(e) => handleItemChange(index, e)}
+                  className="w-full px-2 py-1.5 text-xs rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 placeholder-slate-400 focus:border-primary outline-none"
+                  placeholder="Part name"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => removePart(index)}
+                  className="text-slate-400 hover:text-red-500 ml-2"
+                >
+                  <span className="material-symbols-outlined text-[16px]">
+                    close
+                  </span>
+                </button>
+              </div>
+
               <input
-                name="name"
-                value={part.name}
+                name="storeLink"
+                value={part.storeLink}
                 onChange={(e) => handleItemChange(index, e)}
                 className="w-full px-2 py-1.5 text-xs rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 placeholder-slate-400 focus:border-primary outline-none"
-                placeholder="Part name"
+                placeholder="Store Link URL..."
+                type="text"
               />
-
-              <button
-                type="button"
-                onClick={() => removePart(index)}
-                className="text-slate-400 hover:text-red-500 ml-2"
-              >
-                <span className="material-symbols-outlined text-[16px]">
-                  close
-                </span>
-              </button>
             </div>
-
-            <input
-              name="storeLink"
-              value={part.storeLink}
-              onChange={(e) => handleItemChange(index, e)}
-              className="w-full px-2 py-1.5 text-xs rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 placeholder-slate-400 focus:border-primary outline-none"
-              placeholder="Store Link URL..."
-              type="text"
-            />
           </div>
         ))}
 

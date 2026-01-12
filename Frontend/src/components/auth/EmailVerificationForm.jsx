@@ -114,7 +114,7 @@ const EmailVerificationForm = ({ onSwitch, mode, email }) => {
               onsubmit="event.preventDefault();"
             >
               {/* <!-- OTP Inputs --> */}
-              <div classNameName="flex justify-between gap-2" onPaste={handlePaste}>
+              <div className="flex justify-between gap-2" onPaste={handlePaste}>
                 {Array.from({ length: CODE_LENGTH }).map((_, index) => (
                   <input
                     key={index}
@@ -123,7 +123,7 @@ const EmailVerificationForm = ({ onSwitch, mode, email }) => {
                     inputMode="text"
                     placeholder="-"
                     maxLength={1}
-                    classNameName="h-12 w-full flex-1 rounded-lg border border-gray-300
+                    className="h-12 w-full flex-1 rounded-lg border border-gray-300
         bg-white dark:bg-gray-800 text-center text-xl font-bold
         focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none"
                     value={formData.code[index] || ""}
