@@ -58,6 +58,11 @@ spring:
   jackson:
     time-zone: Asia/Seoul
 
+file:
+  upload:
+    path: uploads/
+    url-prefix: /uploads
+
 jwt:
   secret: ${JWT_SECRET}
   expiration: 86400000
@@ -70,3 +75,6 @@ server:
 
 frontend:
   url: ${FRONTEND_URL}
+
+backend:
+  url: ${BACKEND_URL}

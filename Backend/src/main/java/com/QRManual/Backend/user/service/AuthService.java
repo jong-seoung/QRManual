@@ -8,6 +8,7 @@ import com.QRManual.Backend.user.entity.AuthProvider;
 import com.QRManual.Backend.user.entity.User;
 import com.QRManual.Backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final RedisTemplate<String, String> redisTemplate;
@@ -41,6 +43,7 @@ public class AuthService {
                 .fullName(request.getFullName())
                 .address(request.getAddress())
                 .provider(AuthProvider.LOCAL)
+                .role(request.getRole())
                 .build();
 
         userRepository.save(user);

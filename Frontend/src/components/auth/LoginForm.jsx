@@ -1,128 +1,17 @@
-import { useState } from "react";
-import useAuthStore from "../../store/authStore.js";
-import Input from "../ui/Input.jsx";
-import Button from "../ui/Button.jsx";
+import LoginRight from "./LoginRight";
+import LoginLeft from "./LoginLeft";
 
 const Login = ({ onSwitch }) => {
-  const { login, loading, error } = useAuthStore();
-
-  const [formData, setFormData] = useState({
-    emailOrUsername: "",
-    password: "",
-  });
-
-  const isEmail = (value) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(value);
-  };
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const loginData = isEmail(formData.emailOrUsername)
-        ? { email: formData.emailOrUsername, password: formData.password }
-        : { username: formData.emailOrUsername, password: formData.password };
-
-      await login(loginData);
-      onSwitch("login");
-    } catch (err) {
-      alert(
-        "Login failed: " +
-          err.response +
-          ", " +
-          err.response.status +
-          ", " +
-          err.response.data.message
-      );
-      if (
-        err.response &&
-        err.response.status === 403 &&
-        err.response.data.message === "계정 활성화가 필요합니다."
-      ) {
-        onSwitch("emailVerification");
-      } else {
-        setError(
-          err.response?.data?.message || "로그인 중 오류가 발생했습니다."
-        );
-      }
-    }
-  };
-
-  const handleSocialLogin = (provider) => {
-    window.location.href = `${
-      import.meta.env.VITE_API_URL
-    }/oauth2/authorization/${provider}`;
-  };
-
   return (
-    <div className="flex flex-col items-center justify-center w-full max-w-md">
-      <div className="flex justify-end w-full">
-        <p className="text-gray-500">
-          <div onClick={() => onSwitch("signup")}>Sign up</div>
-        </p>
-      </div>
-      <form className="form-group" onSubmit={handleSubmit}>
-        <Input
-          type="text"
-          name="emailOrUsername"
-          placeholder="Email address or Username"
-          value={formData.emailOrUsername}
-          onChange={handleChange}
-          required
-        />
-
-        <Input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-
-        {error && <p className="text-error">{error}</p>}
-
-        <div className="flex justify-between gap-4">
-          <Button
-            type="button"
-            className="mt-4 w-auto py-2 text-sm"
-            variant="textRed"
-            onClick={() => onSwitch("changePassword")}
-          >
-            forgot password?
-          </Button>
-          <div className="flex justify-between ml-10">
-            <Button
-              variant="iconButton"
-              // icon={<FcGoogle className="w-6 h-6 mt-4 " />}
-              iconOnly
-              onClick={() => handleSocialLogin("google")}
-            ></Button>
-            <Button
-              variant="iconButton"
-              // icon={<FaGithub className="w-6 h-6 mt-4 " />}
-              iconOnly
-              onClick={() => handleSocialLogin("github")}
-            ></Button>
+    <div className="layout-container flex h-full grow flex-col justify-center items-center py-5 mt-15">
+      <div className="px-4 md:px-40 flex flex-1 justify-center w-full">
+        <div className="layout-content-container flex flex-col max-w-[1000px] flex-1">
+          <div className="bg-white dark:bg-[#1a222c] rounded-xl shadow-sm border border-[#e5e7eb] dark:border-[#2a3441] overflow-hidden flex flex-col md:flex-row h-full min-h-[600px]">
+            <LoginLeft onSwitch={onSwitch} />
+            <LoginRight />
           </div>
-          <Button
-            className="mt-4 w-auto text-sm"
-            type="submit"
-            disabled={
-              loading || !formData.emailOrUsername || !formData.password
-            }
-          >
-            {loading ? "Logging in..." : "Log in"}
-          </Button>
         </div>
-      </form>
+      </div>
     </div>
   );
 };
