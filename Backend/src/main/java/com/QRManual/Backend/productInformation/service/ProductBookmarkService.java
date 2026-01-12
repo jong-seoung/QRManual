@@ -59,7 +59,7 @@ public class ProductBookmarkService {
         return productBookmarkRepository.findByUser(user)
                 .stream()
                 .map(bookmark ->
-                        ProductInformationResponse.from(
+                        ProductInformationResponse.fromEntity(
                                 bookmark.getProductInformation()
                         )
                 )

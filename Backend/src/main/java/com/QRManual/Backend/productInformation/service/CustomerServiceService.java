@@ -42,7 +42,7 @@ public class CustomerServiceService {
     }
 
     @Transactional
-    public CustomerServiceResponse editCustomerService(Long customerServiceId, CustomerServiceRequest request){
+    public CustomerServiceResponse updateCustomerService(Long customerServiceId, CustomerServiceRequest request){
         User user = authenticationService.checkCompany();
 
         CustomerService customerService = customerServiceRepository.findById(customerServiceId)

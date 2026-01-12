@@ -13,5 +13,5 @@ public interface FileStorageService {
     /**
      * 파일 삭제
      */
-    void delete(String filePath);
+    void delete(String filePath, String dirName);
 }

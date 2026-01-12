@@ -20,7 +20,7 @@ public class ManualController {
 
     @PutMapping("/edit/{manualId}")
     public ManualResponse editManual(@PathVariable Long manualId, @RequestBody ManualRequest request){
-        return manualService.editManual(manualId, request);
+        return manualService.updateManual(manualId, request);
     }
 
     @DeleteMapping("/delete/{manualId}")

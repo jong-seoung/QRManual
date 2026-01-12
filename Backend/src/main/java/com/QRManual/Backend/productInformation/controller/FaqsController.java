@@ -21,7 +21,7 @@ public class FaqsController {
 
     @PutMapping("/edit/{faqId}")
     public FaqResponse editFaq(@PathVariable Long faqId, @RequestBody FaqRequest request){
-        return faqService.editFaq(faqId, request);
+        return faqService.updateFaq(faqId, request);
     }
 
     @DeleteMapping("/delete/{faqId}")

@@ -5,6 +5,8 @@ import lombok.Data;
 
 @Data
 public class CustomerServiceRequest {
+    private Long id;
+
     private String phone;
 
     @Email(message = "Email should be valid")

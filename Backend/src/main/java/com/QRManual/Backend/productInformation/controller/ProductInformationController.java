@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,19 +20,9 @@ public class ProductInformationController {
 
     private final ProductInformationService productInformationService;
 
-    @PostMapping("/create")
-    public ProductInformationResponse createProductInformation(@RequestBody ProductInformationRequest request) {
-        return productInformationService.createProductInformation(request);
-    }
-
-    @PostMapping("{productInformationId}/create")
-    public Long createSubAll(@PathVariable Long productInformationId, @RequestBody ProductInformationCreateRequest request) {
-        return productInformationService.createSubAll(productInformationId, request);
-    }
-
-    @PutMapping("/edit/{productInformationId}")
-    public ProductInformationResponse editProductInformation(@PathVariable Long productInformationId, @RequestBody ProductInformationRequest request){
-        return productInformationService.editProductInformation(productInformationId, request);
+    @PostMapping("/createAll")
+    public Long createSubAll(@RequestBody ProductInformationCreateRequest request) {
+        return productInformationService.createAll(request);
     }
 
     @GetMapping("/list")
@@ -52,7 +43,7 @@ public class ProductInformationController {
             @RequestParam(defaultValue = "10") int size,
             @PathVariable Long companyId
     ) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return ResponseEntity.ok(
                 productInformationService.getCompanyProductInformation(companyId, pageable)
         );
@@ -61,6 +52,11 @@ public class ProductInformationController {
     @GetMapping("/detail/{productInformationId}")
     public ProductInformationDetailResponse getProductInformationDetail(@PathVariable Long productInformationId) {
         return productInformationService.getProductInformationDetail(productInformationId);
+    }
+
+    @PutMapping("/update/{productInformationId}")
+    public Long updateProductInformation(@PathVariable Long productInformationId, @RequestBody ProductInformationCreateRequest request){
+        return productInformationService.updateProductInformation(productInformationId, request);
     }
 
     @DeleteMapping("/delete/{productInformationId}")

@@ -20,7 +20,7 @@ public class PartController {
 
     @PutMapping("/edit/{partId}")
     public PartsResponse editPart(@PathVariable Long partId, @RequestBody PartsRequest request){
-        return partService.editPart(partId, request);
+        return partService.updatePart(partId, request);
     }
 
     @DeleteMapping("/delete/{partId}")

@@ -40,6 +40,8 @@ public class Manual {
     public void update(ManualRequest request) {
         this.language = request.getLanguage();
         this.pdfUrl = request.getPdfUrl();
+        this.originFileName = request.getOriginFileName();
+        this.ext = request.getExt();
     }
 
 }

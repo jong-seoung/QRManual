@@ -19,10 +19,12 @@ public class ProductInformationResponse {
     private String serialNumberLocation;
     private String productPage;
     private String publicStoreLink;
-    private boolean deleted;
     private LocalDateTime createdAt;
 
-    public static ProductInformationResponse from(ProductInformation entity) {
+    private boolean isSaved;
+    private Long saveCount;
+
+    public static ProductInformationResponse fromEntity(ProductInformation entity) {
         return ProductInformationResponse.builder()
                 .id(entity.getId())
                 .imageUrl(entity.getImageUrl())

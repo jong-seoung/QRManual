@@ -21,7 +21,7 @@ public class CustomerServiceController {
 
     @PutMapping("/edit/{customerServiceId}")
     public CustomerServiceResponse editCustomerService(@PathVariable Long customerServiceId, @RequestBody CustomerServiceRequest request){
-        return customerServiceService.editCustomerService(customerServiceId, request);
+        return customerServiceService.updateCustomerService(customerServiceId, request);
     }
 
     @DeleteMapping("/delete/{customerServiceId}")

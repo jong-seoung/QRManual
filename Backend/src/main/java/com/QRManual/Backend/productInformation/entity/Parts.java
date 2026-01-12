@@ -27,5 +27,6 @@ public class Parts {
     public void update(PartsRequest request) {
         this.name = request.getName();
         this.storeLink = request.getStoreLink();
+        this.imageUrl = request.getImageUrl();
     }
 }

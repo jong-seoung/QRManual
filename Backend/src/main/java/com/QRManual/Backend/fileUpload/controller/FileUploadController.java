@@ -15,14 +15,14 @@ public class FileUploadController {
     private final FileUploadService fileUploadService;
 
     @PostMapping(
-            value = "/upload-file/{name}",
+            value = "/upload-file/{dirName}",
             consumes = "multipart/form-data"
     )
     public ResponseEntity<FileUploadResponse> upload(
             @RequestPart("file") MultipartFile file,
-            @PathVariable String name
+            @PathVariable String dirName
     ) {
-        String path = fileUploadService.uploadFile(file, name);
+        String path = fileUploadService.uploadFile(file, dirName);
 
         return ResponseEntity.ok(
                 new FileUploadResponse(
@@ -31,5 +31,11 @@ public class FileUploadController {
                         file.getSize()
                 )
         );
+    }
+
+    @DeleteMapping("/delete-file/{dirName}")
+    public ResponseEntity<Void> delete(@RequestParam String path, @PathVariable String dirName) {
+        fileUploadService.deleteFile(path, dirName);
+        return ResponseEntity.noContent().build();
     }
 }

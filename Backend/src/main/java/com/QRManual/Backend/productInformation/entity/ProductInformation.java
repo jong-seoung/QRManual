@@ -32,7 +32,7 @@ public class ProductInformation {
     private String serialNumberLocation;
     private String productPage;
     private String publicStoreLink;
-    private boolean deleted;
+    private Boolean deleted;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp

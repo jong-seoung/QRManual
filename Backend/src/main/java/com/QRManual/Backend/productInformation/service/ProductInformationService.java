@@ -25,83 +25,57 @@ public class ProductInformationService {
     private final AuthenticationService authenticationService;
     private final ProductInformationRepository productInformationRepository;
     private final CompanyInfoRepository companyInfoRepository;
+    private final ProductBookmarkRepository productBookmarkRepository;
 
     private final CustomerServiceService customerServiceService;
     private final FaqService faqService;
     private final ManualService manualService;
     private final PartService partService;
 
-    public ProductInformationResponse createProductInformation(ProductInformationRequest request){
+    @Transactional
+    public Long createAll(ProductInformationCreateRequest request){
         User user = authenticationService.checkCompany();
 
         ProductInformation productInformation = new ProductInformation();
-        productInformation.setName(request.getName());
-        productInformation.setImageUrl(request.getImageUrl());
-        productInformation.setModelCode(request.getModelCode());
-        productInformation.setReleaseYear(request.getReleaseYear());
-        productInformation.setSerialNumberLocation(request.getSerialNumberLocation());
-        productInformation.setProductPage(request.getProductPage());
-        productInformation.setPublicStoreLink(request.getPublicStoreLink());
+        productInformation.setName(request.getProductInformation().getName());
+        productInformation.setImageUrl(request.getProductInformation().getImageUrl());
+        productInformation.setModelCode(request.getProductInformation().getModelCode());
+        productInformation.setReleaseYear(request.getProductInformation().getReleaseYear());
+        productInformation.setSerialNumberLocation(request.getProductInformation().getSerialNumberLocation());
+        productInformation.setProductPage(request.getProductInformation().getProductPage());
+        productInformation.setPublicStoreLink(request.getProductInformation().getPublicStoreLink());
         productInformation.setDeleted(false);
         productInformation.setUser(user);
 
         ProductInformation saved = productInformationRepository.save(productInformation);
 
-        return ProductInformationResponse.builder()
-                .id(saved.getId())
-                .build();
-    }
-
-    @Transactional
-    public Long createSubAll(Long productInformationId, ProductInformationCreateRequest request){
-         productInformationRepository.findByIdAndDeletedFalse(productInformationId)
-                .orElseThrow(()-> new IllegalArgumentException("요청한 리소스를 찾을 수 없습니다"));
+        Long savedId = saved.getId();
 
         if (request.getManuals() != null && !request.getManuals().isEmpty()) {
             request.getManuals().forEach(manual ->
-                    manualService.createManual(productInformationId, manual)
+                    manualService.createManual(savedId, manual)
             );
         }
 
         if (request.getFaq() != null && !request.getFaq().isEmpty()) {
             request.getFaq().forEach(faq ->
-                    faqService.createFaq(productInformationId, faq)
+                    faqService.createFaq(savedId, faq)
             );
         }
 
         if (request.getParts() != null && !request.getParts().isEmpty()) {
             request.getParts().forEach(part ->
-                    partService.createPart(productInformationId, part)
+                    partService.createPart(savedId, part)
             );
         }
 
         if (request.getCustomerService() != null) {
-            customerServiceService.createCustomerService(productInformationId, request.getCustomerService());
+            customerServiceService.createCustomerService(savedId, request.getCustomerService());
         }
 
-        return productInformationId;
+        return savedId;
     }
 
-    @Transactional
-    public ProductInformationResponse editProductInformation(Long productInformationId, ProductInformationRequest request){
-        User user = authenticationService.checkCompany();
-
-        ProductInformation productInformation = productInformationRepository.findByIdAndDeletedFalse(productInformationId)
-                .orElseThrow(()-> new IllegalArgumentException("요청한 리소스를 찾을 수 없습니다"));
-
-        authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
-
-        productInformation.setName(request.getName());
-        productInformation.setModelCode(request.getModelCode());
-        productInformation.setReleaseYear(request.getReleaseYear());
-        productInformation.setSerialNumberLocation(request.getSerialNumberLocation());
-        productInformation.setProductPage(request.getProductPage());
-        productInformation.setPublicStoreLink(request.getPublicStoreLink());
-
-        return ProductInformationResponse.builder()
-                .id(productInformation.getId())
-                .build();
-    }
 
     public Page<ProductInformationResponse> getAllProductInformation(int page, int size, String  keyword, String sort){
         User user = authenticationService.getCurrentUser();
@@ -113,17 +87,26 @@ public class ProductInformationService {
 
         Pageable pageable = PageRequest.of(page, size, sortOption);
 
-        Page<ProductInformation> result;
+        Page<ProductInformation> results;
 
 
         if (keyword == null || keyword.isBlank()) {
-            result = productInformationRepository.findByDeletedFalse(pageable);
+            results = productInformationRepository.findByDeletedFalse(pageable);
         } else {
-            result = productInformationRepository
+            results = productInformationRepository
                     .findByDeletedFalseAndNameContaining(keyword, pageable);
         }
 
-        return result.map(ProductInformationResponse::from);
+        return results.map(result -> {
+            ProductInformationResponse response = ProductInformationResponse.fromEntity(result);
+            boolean save = productBookmarkRepository.existsByUserAndProductInformation(user, result);
+            Long saveCount = productBookmarkRepository.countByProductInformation(result.getId());
+
+            response.setSaved(save);
+            response.setSaveCount(saveCount);
+            return response;
+        });
+
     }
 
     public Page<ProductInformationResponse> getCompanyProductInformation(Long companyId, Pageable pageable) {
@@ -135,7 +118,7 @@ public class ProductInformationService {
         Page<ProductInformation> products =
                 productInformationRepository.findByUserIdAndDeletedFalse(userId, pageable);
 
-        return products.map(ProductInformationResponse::from);
+        return products.map(ProductInformationResponse::fromEntity);
     }
 
     public ProductInformationDetailResponse getProductInformationDetail(Long productInformationId){
@@ -173,7 +156,6 @@ public class ProductInformationService {
             customerService = CustomerServiceResponse.fromEntity(product.getCustomerService());
         }
 
-        // 6. 최종 응답 조립
         return ProductInformationDetailResponse.builder()
                 .productInformation(productInformation)
                 .manuals(manuals)
@@ -181,6 +163,44 @@ public class ProductInformationService {
                 .faqs(faqs)
                 .customerService(customerService)
                 .build();
+    }
+
+    @Transactional
+    public Long updateProductInformation(Long productInformationId, ProductInformationCreateRequest request){
+        User user = authenticationService.checkCompany();
+
+        ProductInformation productInformation = productInformationRepository
+                .findByIdAndDeletedFalse(productInformationId)
+                .orElseThrow(() -> new IllegalArgumentException("요청한 리소스를 찾을 수 없습니다"));
+
+        authenticationService.checkProductOwnership(user.getId(), productInformation.getUser().getId());
+
+        productInformation.setName(request.getProductInformation().getName());
+        productInformation.setImageUrl(request.getProductInformation().getImageUrl());
+        productInformation.setModelCode(request.getProductInformation().getModelCode());
+        productInformation.setReleaseYear(request.getProductInformation().getReleaseYear());
+        productInformation.setSerialNumberLocation(request.getProductInformation().getSerialNumberLocation());
+        productInformation.setProductPage(request.getProductInformation().getProductPage());
+        productInformation.setPublicStoreLink(request.getProductInformation().getPublicStoreLink());
+
+        List<ManualRequest> incomingManuals = request.getManuals() != null ? request.getManuals() : List.of();
+        manualService.syncManuals(productInformation, incomingManuals);
+
+        List<FaqRequest> incomingFaqs = request.getFaq() != null ? request.getFaq() : List.of();
+        faqService.syncFaqs(productInformation, incomingFaqs);
+
+        List<PartsRequest> incomingParts = request.getParts() != null ? request.getParts() : List.of();
+        partService.syncParts(productInformation, incomingParts);
+
+        if (request.getCustomerService() != null) {
+            if (productInformation.getCustomerService() == null) {
+                customerServiceService.createCustomerService(productInformation.getId(), request.getCustomerService());
+            } else {
+                customerServiceService.updateCustomerService(productInformation.getCustomerService().getId(), request.getCustomerService());
+            }
+        }
+
+        return productInformation.getId();
     }
 
     public void deleteProductInformation(Long productInformationId){

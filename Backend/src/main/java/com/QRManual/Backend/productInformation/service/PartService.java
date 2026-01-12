@@ -2,6 +2,7 @@ package com.QRManual.Backend.productInformation.service;
 
 import com.QRManual.Backend.productInformation.dto.PartsRequest;
 import com.QRManual.Backend.productInformation.dto.PartsResponse;
+import com.QRManual.Backend.productInformation.entity.Manual;
 import com.QRManual.Backend.productInformation.entity.Parts;
 import com.QRManual.Backend.productInformation.entity.ProductInformation;
 import com.QRManual.Backend.productInformation.repository.PartRepository;
@@ -11,6 +12,8 @@ import com.QRManual.Backend.user.service.AuthenticationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -41,7 +44,7 @@ public class PartService {
     }
 
     @Transactional
-    public PartsResponse editPart(Long partId, PartsRequest request){
+    public PartsResponse updatePart(Long partId, PartsRequest request){
         User user = authenticationService.checkCompany();
 
         Parts parts = partRepository.findById(partId)
@@ -54,6 +57,26 @@ public class PartService {
         parts.update(request);
 
         return PartsResponse.fromEntity(parts);
+    }
+
+    @Transactional
+    public void syncParts(ProductInformation product, List<PartsRequest> incoming) {
+        List<Parts> existing = product.getPartsList();
+
+        List<Parts> toDelete = existing.stream()
+                .filter(p -> incoming.stream()
+                        .noneMatch(i -> i.getId() != null && i.getId().equals(p.getId())))
+                .toList();
+
+        toDelete.forEach(product::removePart);
+
+        for (PartsRequest pr : incoming) {
+            if (pr.getId() == null) {
+                createPart(product.getId(), pr);
+            } else {
+                updatePart(pr.getId(), pr);
+            }
+        }
     }
 
     @Transactional

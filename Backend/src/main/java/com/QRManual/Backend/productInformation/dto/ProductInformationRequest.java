@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class ProductInformationRequest {
+    private Long id;
     private String name;
     private String imageUrl;
     private String modelCode;

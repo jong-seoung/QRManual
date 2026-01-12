@@ -1,6 +1,5 @@
 package com.QRManual.Backend.fileUpload.service;
 
-import com.QRManual.Backend.productInformation.entity.Manual;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,5 +12,9 @@ public class FileUploadService {
 
     public String uploadFile(MultipartFile file, String dirName) {
         return fileStorageService.upload(file, dirName);
+    }
+
+    public void deleteFile(String path, String dirName) {
+        fileStorageService.delete(path, dirName);
     }
 }

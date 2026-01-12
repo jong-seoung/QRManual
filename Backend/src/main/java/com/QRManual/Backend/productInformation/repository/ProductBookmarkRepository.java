@@ -4,6 +4,8 @@ import com.QRManual.Backend.productInformation.entity.ProductBookmark;
 import com.QRManual.Backend.productInformation.entity.ProductInformation;
 import com.QRManual.Backend.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,4 +18,7 @@ public interface ProductBookmarkRepository
     Optional<ProductBookmark> findByUserAndProductInformation(User user, ProductInformation productInformation);
 
     List<ProductBookmark> findByUser(User user);
+
+    @Query("SELECT COUNT(l) FROM ProductBookmark l WHERE l.productInformation.id = :productInformationId")
+    Long countByProductInformation(@Param("productInformationId") Long productInformationId);
 }

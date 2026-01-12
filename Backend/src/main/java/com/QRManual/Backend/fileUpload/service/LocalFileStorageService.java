@@ -1,5 +1,6 @@
 package com.QRManual.Backend.fileUpload.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @Profile({"local", "dev"})
 public class LocalFileStorageService implements FileStorageService{
 
@@ -42,9 +44,12 @@ public class LocalFileStorageService implements FileStorageService{
     }
 
     @Override
-    public void delete(String filePath) {
+    public void delete(String filePath, String dirName) {
         try {
-            Path path = Paths.get(uploadPath + filePath);
+            String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+
+            log.info(fileName);
+            Path path = Paths.get(uploadPath, dirName, fileName);
             Files.deleteIfExists(path);
         } catch (Exception e) {
             throw new RuntimeException("파일 삭제 실패", e);

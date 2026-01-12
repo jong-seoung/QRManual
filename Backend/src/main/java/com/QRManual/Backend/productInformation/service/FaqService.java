@@ -2,8 +2,10 @@ package com.QRManual.Backend.productInformation.service;
 
 import com.QRManual.Backend.productInformation.dto.FaqRequest;
 import com.QRManual.Backend.productInformation.dto.FaqResponse;
+import com.QRManual.Backend.productInformation.dto.ManualRequest;
 import com.QRManual.Backend.productInformation.entity.CustomerService;
 import com.QRManual.Backend.productInformation.entity.Faq;
+import com.QRManual.Backend.productInformation.entity.Manual;
 import com.QRManual.Backend.productInformation.entity.ProductInformation;
 import com.QRManual.Backend.productInformation.repository.FaqRepository;
 import com.QRManual.Backend.productInformation.repository.ProductInformationRepository;
@@ -12,6 +14,8 @@ import com.QRManual.Backend.user.service.AuthenticationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -41,7 +45,7 @@ public class FaqService {
     }
 
     @Transactional
-    public FaqResponse editFaq(Long faqId, FaqRequest request){
+    public FaqResponse updateFaq(Long faqId, FaqRequest request){
         User user = authenticationService.checkCompany();
 
         Faq faq = faqRepository.findById(faqId)
@@ -54,6 +58,26 @@ public class FaqService {
         faq.update(request);
 
         return FaqResponse.fromEntity(faq);
+    }
+
+    @Transactional
+    public void syncFaqs(ProductInformation product, List<FaqRequest> incoming) {
+        List<Faq> existing = product.getFaqs();
+
+        List<Faq> toDelete = existing.stream()
+                .filter(f -> incoming.stream()
+                        .noneMatch(i -> i.getId() != null && i.getId().equals(f.getId())))
+                .toList();
+
+        toDelete.forEach(product::removeFaq);
+
+        for (FaqRequest fr : incoming) {
+            if (fr.getId() == null) {
+                createFaq(product.getId(), fr);
+            } else {
+                updateFaq(fr.getId(), fr);
+            }
+        }
     }
 
     @Transactional

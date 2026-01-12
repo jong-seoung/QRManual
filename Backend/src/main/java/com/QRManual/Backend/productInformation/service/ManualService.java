@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ManualService {
@@ -43,7 +45,7 @@ public class ManualService {
     }
 
     @Transactional
-    public ManualResponse editManual(Long manualId, ManualRequest request){
+    public ManualResponse updateManual(Long manualId, ManualRequest request){
         User user = authenticationService.checkCompany();
 
         Manual manual = manualRepository.findById(manualId)
@@ -56,6 +58,26 @@ public class ManualService {
         manual.update(request);
 
         return ManualResponse.fromEntity(manual);
+    }
+
+    @Transactional
+    public void syncManuals(ProductInformation product, List<ManualRequest> incoming) {
+        List<Manual> existing = product.getManuals();
+
+        List<Manual> toDelete = existing.stream()
+                .filter(m -> incoming.stream()
+                        .noneMatch(i -> i.getId() != null && i.getId().equals(m.getId())))
+                .toList();
+
+        toDelete.forEach(product::removeManual);
+
+        for (ManualRequest mr : incoming) {
+            if (mr.getId() == null) {
+                createManual(product.getId(), mr);
+            } else {
+                updateManual(mr.getId(), mr);
+            }
+        }
     }
 
     @Transactional
