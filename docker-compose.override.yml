@@ -1,0 +1,22 @@
+# dev 오버라이드: DB·Redis만 호스트로 노출, 앱은 호스트에서 `pnpm dev` 실행 권장.
+# nginx·front·back 서비스는 dev에서 사용 안 함 (스케일 0)
+
+services:
+  nginx:
+    profiles: ["disabled"]
+
+  front:
+    profiles: ["disabled"]
+
+  back:
+    profiles: ["disabled"]
+
+  # 호스트에 이미 postgres(5432)·redis(6379)가 있을 수 있어 다른 포트로 매핑.
+  # 컨테이너 내부 포트는 그대로(5432/6379), 호스트는 5433/6380.
+  postgres:
+    ports:
+      - "5433:5432"
+
+  redis:
+    ports:
+      - "6380:6379"

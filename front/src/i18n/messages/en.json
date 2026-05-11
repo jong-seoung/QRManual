@@ -1,0 +1,41 @@
+{
+  "common": {
+    "appName": "QRManual",
+    "manuals": "Manuals",
+    "solutions": "Solutions",
+    "pricing": "Pricing",
+    "help": "Help",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "loading": "Loading…"
+  },
+  "auth": {
+    "login": "Sign in",
+    "logout": "Sign out",
+    "signup": "Sign up",
+    "email": "Email",
+    "username": "Username",
+    "password": "Password",
+    "passwordConfirm": "Confirm password",
+    "fullName": "Full name",
+    "address": "Address",
+    "verificationCode": "Verification code",
+    "emailVerification": "Email verification",
+    "sendCode": "Send code",
+    "resendCode": "Resend code",
+    "verify": "Verify",
+    "forgotPassword": "Forgot password",
+    "resetPassword": "Reset password",
+    "newPassword": "New password",
+    "loginWith": "Continue with {provider}",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "errors": {
+      "invalidCredentials": "Invalid email or password",
+      "userNotActivated": "Email not verified",
+      "wrongCode": "Wrong verification code",
+      "passwordMismatch": "Passwords do not match",
+      "unknown": "Something went wrong"
+    }
+  }
+}

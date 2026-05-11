@@ -1,0 +1,47 @@
+# 환경 변수 (시크릿 — 절대 커밋 금지)
+.env
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# 의존성
+node_modules/
+
+# 빌드 산출물
+dist/
+build/
+.next/
+out/
+coverage/
+
+# 캐시
+.cache/
+.eslintcache
+.turbo/
+
+# 로그
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 업로드 (운영 시 볼륨에 저장)
+uploads/
+
+# Drizzle 메타
+back/drizzle/meta/_journal.tmp.json
+
+# Claude Code 로컬 설정
+.claude/

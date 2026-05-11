@@ -1,0 +1,10 @@
+node_modules
+.next
+dist
+build
+coverage
+pnpm-lock.yaml
+
+# 마이그레이션 동안 옛 코드 — 옛 컨벤션 보존
+Backend
+Frontend

@@ -1,0 +1,14 @@
+packages:
+  - "front"
+  - "back"
+
+# native build 스크립트 허용 목록 (pnpm 11+).
+# - 필수 true: 없으면 빌드/런타임 실패
+# - false: 텔레메트리·익명 통계 — 동작에 영향 없음
+allowBuilds:
+  argon2: true            # 비밀번호 해시 (네이티브 빌드 필요)
+  esbuild: true           # 번들러 바이너리 다운로드
+  sharp: true             # Next.js 이미지 최적화
+  unrs-resolver: true     # Next.js 모듈 resolver
+  '@nestjs/core': false   # postinstall 텔레메트리/안내
+  '@scarf/scarf': false   # 익명 사용 통계
