@@ -12,7 +12,7 @@ export async function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b bg-(--color-background)/90 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-screen-xl items-center justify-between gap-4">
+      <div className="flex h-14 items-center justify-between gap-4">
         <Link href="/" className="font-bold tracking-tight">
           QRManual
         </Link>

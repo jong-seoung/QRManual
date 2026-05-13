@@ -13,7 +13,7 @@ export default async function NewManualPage() {
   if (!isAdminOrAbove(user)) redirect("/?error=forbidden");
 
   return (
-    <main className="mx-auto max-w-screen-md space-y-6 py-8">
+    <main className="space-y-6 py-8">
       <header className="space-y-3">
         <h1 className="text-[40px] font-semibold leading-[1.1] tracking-[-0.003em] text-(--color-ink) md:text-[48px]">
           새 매뉴얼
