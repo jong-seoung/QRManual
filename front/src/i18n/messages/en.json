@@ -37,5 +37,44 @@
       "passwordMismatch": "Passwords do not match",
       "unknown": "Something went wrong"
     }
+  },
+  "home": {
+    "hero": {
+      "title": "One QR. Every manual.",
+      "subtitle": "Scan the QR on the box, or search the manual right here.",
+      "searchPlaceholder": "Search by product, model, or brand",
+      "searchSubmit": "Search",
+      "ctaGuest": "Sign up free",
+      "ctaUser": "My bookmarks"
+    },
+    "trending": {
+      "label": "Trending",
+      "items": ["Air fryer", "Air purifier", "Robot vacuum", "Rice cooker", "Hair dryer"]
+    },
+    "popular": {
+      "title": "Popular manuals right now",
+      "viewAll": "View all",
+      "headerLinkGuest": "Log in",
+      "headerLinkUser": "My manuals",
+      "empty": "No manuals yet",
+      "noImage": "No image",
+      "categoryFallback": "Manual"
+    },
+    "features": {
+      "title": "Why QRManual?",
+      "items": [
+        { "title": "Instant on scan", "body": "Scan to open, no app." },
+        { "title": "KO·EN ready", "body": "Same manual, two languages." },
+        { "title": "Keep forever", "body": "Save manuals to your account." },
+        { "title": "Always up to date", "body": "Latest revision from the maker." }
+      ]
+    },
+    "bottomCta": {
+      "title": "Search before you scan.",
+      "primaryGuest": "Sign up free",
+      "primaryUser": "My bookmarks",
+      "secondaryGuest": "Log in",
+      "secondaryUser": "Search manuals"
+    }
   }
 }
