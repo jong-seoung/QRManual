@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth/server";
 import { isAdminOrAbove } from "@/lib/auth/types";
 
+import { ThemeToggle } from "./theme-toggle";
 import { UserMenu } from "./user-menu";
 
 export async function Header() {
@@ -11,7 +12,7 @@ export async function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b bg-(--color-background)/90 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-screen-xl items-center justify-between gap-4 px-4 md:px-6 lg:px-8">
+      <div className="flex h-14 items-center justify-between gap-4">
         <Link href="/" className="font-bold tracking-tight">
           QRManual
         </Link>
@@ -53,6 +54,7 @@ export async function Header() {
               </Link>
             </>
           )}
+          <ThemeToggle />
         </div>
       </div>
     </header>
