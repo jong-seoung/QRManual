@@ -15,7 +15,7 @@ export default async function CompanyAdminPage() {
   if (!isAdminOrAbove(user)) redirect("/?error=forbidden");
 
   return (
-    <main className="mx-auto max-w-screen-md space-y-6 py-8">
+    <main className="space-y-6 py-8">
       <header>
         <h1 className="text-3xl font-bold">회사 관리</h1>
         <p className="mt-1 text-sm text-(--color-muted-foreground)">

@@ -8,7 +8,7 @@ export default async function HomePage() {
   const user = await getCurrentUser();
 
   return (
-    <main className="mx-auto max-w-screen-xl space-y-6 py-8">
+    <main className="space-y-6 py-8">
       <h1 className="text-4xl font-bold tracking-tight md:text-5xl">QRManual</h1>
       <p className="mt-4 text-lg text-(--color-muted-foreground)">
         QR로 매뉴얼·제품 정보를 즉시.
