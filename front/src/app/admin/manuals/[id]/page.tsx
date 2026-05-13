@@ -44,7 +44,7 @@ export default async function EditManualPage({
   }
 
   return (
-    <main className="mx-auto max-w-screen-md space-y-6 px-4 py-8 md:px-6 lg:px-8">
+    <main className="mx-auto max-w-screen-md space-y-6 py-8">
       <h1 className="text-3xl font-bold">매뉴얼 수정</h1>
       <ManualForm mode="edit" manual={manual} />
       <PdfsSection manualId={manual.id} />
