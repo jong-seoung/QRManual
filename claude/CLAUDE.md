@@ -27,18 +27,16 @@
 
 ```
 QRManual/
-├── front/                  # Next.js (마이그레이션 후 Frontend 대체)
-├── back/                   # NestJS (마이그레이션 후 Backend 대체)
+├── front/                  # Next.js
+├── back/                   # NestJS
 ├── nginx/                  # reverse proxy 설정 (conf.d, certs)
 ├── docker-compose.yml      # dev: front + back + postgres + redis (+ nginx)
 ├── docker-compose.prod.yml # prod: 위 + nginx + 환경변수·이미지 태그
 ├── .env.example
-├── claude/                 # 메타 가이드 (이 폴더)
-├── Frontend/               # (구) Vite 코드 — 마이그레이션 완료 시 제거
-└── Backend/                # (구) Spring 코드 — 마이그레이션 완료 시 제거
+└── claude/                 # 메타 가이드 (이 폴더)
 ```
 
-마이그레이션 중에는 **신구가 한 저장소에 공존**한다. 신규 폴더(`front/`, `back/`)에 이전이 끝나기 전까진 옛 폴더 삭제 금지.
+옛 `Frontend/`(Vite) · `Backend/`(Spring) 트리는 마이그레이션 완료로 제거되었다. 과거 슬라이스 참조가 필요하면 git 히스토리에서 확인.
 
 ---
 

@@ -2,13 +2,9 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* DESIGN.md (Apple) 토큰 매핑.
-   - 단일 Action Blue 액센트
-   - SF Pro 폴백, 음수 letter-spacing
-   - 버튼·검색 입력은 pill, 카드는 18px rounded
-*/
+/* DESIGN.md (Notion 기반) 토큰 매핑 — claude/design.md 원칙에 따라 light/dark 토큰 동시 정의. */
 @theme {
-  /* Brand — 단일 액센트. Apple 그레이드 모노톤(Black & White). */
+  /* Brand — 모노톤 액센트(라이트=near-black, 다크=white). */
   --color-primary: #1d1d1f; /* near-black ink */
   --color-primary-focus: #000000;
   --color-primary-on-dark: #ffffff;
