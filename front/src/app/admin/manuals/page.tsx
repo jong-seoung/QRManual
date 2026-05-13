@@ -36,7 +36,7 @@ export default async function ManualsAdminPage({
   }
 
   return (
-    <main className="mx-auto max-w-screen-xl space-y-6 px-4 py-8 md:px-6 lg:px-8">
+    <main className="space-y-6 py-8">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold">설명서 관리</h1>

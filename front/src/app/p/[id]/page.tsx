@@ -43,7 +43,7 @@ export default async function PublicManualPage({ params }: PageProps) {
   const pdfsByLang = groupBy(pdfs, (p) => p.language);
 
   return (
-    <main className="mx-auto max-w-screen-md space-y-6 px-4 py-8 md:px-6 lg:px-8">
+    <main className="space-y-6 py-8">
       {/* 회사 헤더 */}
       <header className="flex items-center gap-2 text-sm text-(--color-muted-foreground)">
         {company.homePage ? (

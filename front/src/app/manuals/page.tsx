@@ -18,7 +18,7 @@ export default async function PublicManualsPage({
   const result = await manualsApi.publicList({ keyword, page, size });
 
   return (
-    <main className="mx-auto max-w-screen-xl space-y-6 px-4 py-8 md:px-6 lg:px-8">
+    <main className="space-y-6 py-8">
       <header>
         <h1 className="text-3xl font-bold">설명서 검색</h1>
         <p className="mt-1 text-sm text-(--color-muted-foreground)">
