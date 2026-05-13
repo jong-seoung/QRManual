@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* DESIGN.md (Apple) 토큰 매핑.
    - 단일 Action Blue 액센트
    - SF Pro 폴백, 음수 letter-spacing
@@ -48,12 +50,40 @@
   --font-sans: "SF Pro Text", "SF Pro Display", "Pretendard", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
+/* Dark mode override — Notion DESIGN.md (brand-navy 기반) */
+.dark {
+  --color-primary: #ffffff;
+  --color-primary-focus: #ffffff;
+  --color-primary-foreground: #0a1530;
+
+  --color-background: #0a1530;       /* brand-navy */
+  --color-canvas-parchment: #070f24; /* brand-navy-deep */
+  --color-surface-pearl: #1a2a52;    /* brand-navy-mid */
+  --color-muted: #1a2a52;
+
+  --color-hairline: #2a3a62;
+  --color-divider-soft: #1a2a52;
+  --color-border: #2a3a62;
+  --color-border-strong: #3a4a72;
+
+  --color-foreground: #ffffff;
+  --color-ink: #ffffff;
+  --color-ink-muted-80: #d0d6e0;
+  --color-ink-muted-48: #a4a097;
+  --color-body-muted: #787671;
+  --color-muted-foreground: #a4a097;
+}
+
 * {
   border-color: var(--color-border);
 }
 
 html {
   color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 body {
