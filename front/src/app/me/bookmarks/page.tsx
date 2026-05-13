@@ -24,7 +24,7 @@ export default async function MyBookmarksPage() {
   }
 
   return (
-    <main className="mx-auto max-w-screen-md space-y-6 px-4 py-8 md:px-6 lg:px-8">
+    <main className="mx-auto max-w-screen-md space-y-6 py-8">
       <header>
         <h1 className="text-3xl font-bold">저장한 사용설명서</h1>
         <p className="mt-1 text-sm text-(--color-muted-foreground)">{items.length}개</p>
