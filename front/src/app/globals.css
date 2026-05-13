@@ -48,29 +48,31 @@
   --font-sans: "Inter", "Pretendard", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-/* Dark mode override — brand-navy 베이스 + 보라 액센트 라이트 변형 */
+/* Dark mode override — 중립 near-black 베이스 + 보라 액센트 라이트 변형.
+   노션 DESIGN.md에 다크 토큰이 없어(Known Gaps) 자체 결정.
+   BottomCta 같은 의도된 brand-navy 액센트는 컴포넌트 인라인에서 별도 잠금. */
 .dark {
   --color-primary: #d6b6f6;          /* brand-purple-300 — 다크 위에서 보라 유지 */
   --color-primary-focus: #e6d0fa;
-  --color-primary-foreground: #391c57; /* brand-purple-800 — 위 보라 위에 올라가는 텍스트 */
+  --color-primary-foreground: #391c57; /* brand-purple-800 */
 
-  --color-background: #0a1530;       /* brand-navy */
-  --color-canvas-parchment: #070f24; /* brand-navy-deep */
-  --color-surface-pearl: #1a2a52;    /* brand-navy-mid */
-  --color-surface-tile: #1a2a52;
-  --color-muted: #1a2a52;
+  --color-background: #0f0f10;       /* near-black */
+  --color-canvas-parchment: #161618; /* popular 섹션 배경 */
+  --color-surface-pearl: #1a1a1c;
+  --color-surface-tile: #1a1a1c;
+  --color-muted: #161618;
 
-  --color-hairline: #2a3a62;
-  --color-divider-soft: #1a2a52;
-  --color-border: #2a3a62;
-  --color-border-strong: #3a4a72;
+  --color-hairline: #2a2a2e;
+  --color-divider-soft: #1f1f22;
+  --color-border: #2a2a2e;
+  --color-border-strong: #3a3a3e;
 
-  --color-foreground: #ffffff;       /* on-dark */
+  --color-foreground: #ffffff;
   --color-ink: #ffffff;
-  --color-ink-muted-80: #d0d6e0;
-  --color-ink-muted-48: #a4a097;     /* on-dark-muted/stone */
-  --color-body-muted: #787671;       /* steel */
-  --color-muted-foreground: #a4a097;
+  --color-ink-muted-80: #c4c4c6;
+  --color-ink-muted-48: #8b8b8d;
+  --color-body-muted: #6a6a6c;
+  --color-muted-foreground: #8b8b8d;
 }
 
 * {
