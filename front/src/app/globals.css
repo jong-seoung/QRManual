@@ -2,7 +2,7 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* claude/DESIGN.md (Notion 기반) 토큰 매핑.
+/* front/claude/DESIGN.md (Notion 기반) 토큰 매핑.
    라이트는 노션 라이트 팔레트를 그대로 차용.
    다크는 노션이 명시하지 않음(Known Gaps) → brand-navy 기반 자체 매핑. */
 @theme {
