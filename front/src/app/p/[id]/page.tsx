@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 import { BookmarkButton } from "@/components/bookmark-button";
 import { type ApiError } from "@/lib/api/client";
@@ -28,6 +30,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function PublicManualPage({ params }: PageProps) {
   const { id } = await params;
+  const t = await getTranslations("publicManual");
   const manualId = Number(id);
   if (!Number.isFinite(manualId)) notFound();
 
@@ -43,213 +46,457 @@ export default async function PublicManualPage({ params }: PageProps) {
   const pdfsByLang = groupBy(pdfs, (p) => p.language);
 
   return (
-    <main className="space-y-6 py-8">
-      {/* 회사 헤더 */}
-      <header className="flex items-center gap-2 text-sm text-(--color-muted-foreground)">
+    <main>
+      <Hero
+        manual={manual}
+        company={company}
+        officialLabel={t("official")}
+        modelLabel={manual.modelCode ? t("model", { code: manual.modelCode }) : null}
+        yearLabel={manual.releaseYear ? t("year", { year: manual.releaseYear }) : null}
+      />
+
+      <PdfSection
+        title={t("sections.pdfs")}
+        emptyLabel={t("emptyPdfs")}
+        openLabel={t("openPdf")}
+        pdfsByLang={pdfsByLang}
+        manualId={manual.id}
+      />
+
+      {parts.length > 0 ? (
+        <PartsSection title={t("sections.parts")} buyLabel={t("parts.buy")} parts={parts} />
+      ) : null}
+
+      {faqs.length > 0 ? <FaqSection title={t("sections.faqs")} faqs={faqs} /> : null}
+
+      {customerService ? (
+        <CustomerServiceSection
+          title={t("sections.customerService")}
+          phoneLabel={t("cs.phone")}
+          emailLabel={t("cs.email")}
+          hoursLabel={t("cs.hours")}
+          chatLabel={t("cs.chat")}
+          cs={customerService}
+        />
+      ) : null}
+
+      {manual.serialNumberLocation || manual.productPage || manual.publicStoreLink ? (
+        <ExtrasSection
+          title={t("sections.extras")}
+          serialLabel={t("extras.serialLocation")}
+          productPageLabel={t("extras.productPage")}
+          storeLabel={t("extras.store")}
+          manual={manual}
+        />
+      ) : null}
+
+      <FooterActions homeLabel={t("actions.home")} searchLabel={t("actions.search")} />
+    </main>
+  );
+}
+
+type ManualHeader = {
+  id: number;
+  name: string;
+  imageUrl: string | null;
+  modelCode: string | null;
+  releaseYear: number | null;
+  serialNumberLocation: string | null;
+  productPage: string | null;
+  publicStoreLink: string | null;
+};
+type CompanyHeader = { id: number; name: string; officialMark: boolean; homePage: string | null };
+type PdfRow = {
+  id: number;
+  manualId: number;
+  language: string;
+  title: string | null;
+  pdfUrl: string;
+  originFileName: string | null;
+  mimeType: string | null;
+  fileSize: number | null;
+  createdAt: string;
+};
+type PartRow = { id: number; manualId: number; name: string; imageUrl: string | null; storeLink: string | null };
+type FaqRow = { id: number; manualId: number; question: string; answer: string };
+type CsRow = {
+  id: number;
+  manualId: number;
+  phone: string | null;
+  email: string | null;
+  operationTime: string | null;
+  chatLink: string | null;
+};
+
+function Hero({
+  manual,
+  company,
+  officialLabel,
+  modelLabel,
+  yearLabel,
+}: {
+  manual: ManualHeader;
+  company: CompanyHeader;
+  officialLabel: string;
+  modelLabel: string | null;
+  yearLabel: string | null;
+}) {
+  return (
+    <section className="py-12 lg:py-16">
+      <div className="flex items-center gap-2 text-sm">
         {company.homePage ? (
-          <a href={company.homePage} target="_blank" rel="noreferrer" className="hover:underline">
+          <a
+            href={company.homePage}
+            target="_blank"
+            rel="noreferrer"
+            className="text-(--color-muted-foreground) hover:text-(--color-primary) hover:underline"
+          >
             {company.name}
           </a>
         ) : (
-          <span>{company.name}</span>
+          <span className="text-(--color-muted-foreground)">{company.name}</span>
         )}
         {company.officialMark ? (
-          <span
-            title="공식 인증"
-            className="inline-flex items-center rounded-full bg-(--color-primary) px-2 py-0.5 text-xs font-medium text-(--color-primary-foreground)"
-          >
-            공식
+          <span className="inline-flex rounded-(--radius-utility) bg-(--color-primary) px-2 py-0.5 text-xs font-semibold text-(--color-primary-foreground)">
+            {officialLabel}
           </span>
         ) : null}
-      </header>
+      </div>
 
-      {/* 매뉴얼 헤더 */}
-      <section className="mt-3">
-        <h1 className="text-3xl font-bold tracking-tight md:text-4xl">{manual.name}</h1>
-        <div className="mt-1 flex flex-wrap gap-2 text-sm text-(--color-muted-foreground)">
-          {manual.modelCode ? <span>모델 {manual.modelCode}</span> : null}
-          {manual.releaseYear ? <span>· {manual.releaseYear}</span> : null}
-        </div>
+      <h1 className="mt-3 text-4xl font-semibold tracking-tight text-(--color-foreground) lg:text-6xl">
+        {manual.name}
+      </h1>
+      {modelLabel || yearLabel ? (
+        <p className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-(--color-muted-foreground)">
+          {modelLabel ? <span>{modelLabel}</span> : null}
+          {yearLabel ? <span>{yearLabel}</span> : null}
+        </p>
+      ) : null}
 
-        {manual.imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
+      {manual.imageUrl ? (
+        <div className="mt-8 overflow-hidden rounded-(--radius-card) border border-(--color-border) bg-(--color-surface-tile)">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={manual.imageUrl}
             alt={manual.name}
-            className="mt-4 w-full rounded-(--radius) border object-cover"
+            className="aspect-[16/9] w-full object-cover"
           />
-        ) : null}
-      </section>
+        </div>
+      ) : null}
+    </section>
+  );
+}
 
-      {/* PDF — QR 진입의 핵심 */}
-      <section className="mt-6 space-y-3">
-        <h2 className="text-xl font-semibold">사용설명서</h2>
-        {pdfs.length === 0 ? (
-          <p className="rounded-md border bg-(--color-muted) p-6 text-center text-sm text-(--color-muted-foreground)">
-            등록된 매뉴얼이 없습니다
-          </p>
-        ) : (
-          Object.entries(pdfsByLang).map(([lang, items]) => (
-            <div key={lang} className="rounded-(--radius) border">
-              <div className="border-b bg-(--color-muted) px-3 py-2 text-xs font-medium uppercase tracking-wide">
-                {lang}
+function PdfSection({
+  title,
+  emptyLabel,
+  openLabel,
+  pdfsByLang,
+  manualId,
+}: {
+  title: string;
+  emptyLabel: string;
+  openLabel: string;
+  pdfsByLang: Record<string, PdfRow[]>;
+  manualId: number;
+}) {
+  const langs = Object.keys(pdfsByLang);
+  return (
+    <section className="border-t border-(--color-divider-soft) bg-(--color-canvas-parchment) py-12 lg:py-16">
+      <h2 className="text-2xl font-semibold tracking-tight text-(--color-foreground) lg:text-3xl">
+        {title}
+      </h2>
+
+      {langs.length === 0 ? (
+        <p className="mt-6 rounded-(--radius-card) border border-(--color-border) bg-(--color-background) px-6 py-12 text-center text-sm text-(--color-muted-foreground)">
+          {emptyLabel}
+        </p>
+      ) : (
+        <div className="mt-6 space-y-4">
+          {langs.map((lang) => (
+            <div
+              key={lang}
+              className="overflow-hidden rounded-(--radius-card) border border-(--color-border) bg-(--color-background)"
+            >
+              <div className="flex items-center gap-2 border-b border-(--color-divider-soft) bg-(--color-canvas-parchment) px-4 py-2.5">
+                <span className="rounded-(--radius-utility) bg-(--color-background) px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-(--color-primary)">
+                  {lang}
+                </span>
               </div>
-              <ul className="divide-y">
-                {items.map((p) => (
-                  <li key={p.id} className="flex items-center justify-between gap-3 p-3 text-sm">
+              <ul className="divide-y divide-(--color-divider-soft)">
+                {pdfsByLang[lang].map((p) => (
+                  <li
+                    key={p.id}
+                    className="flex items-center justify-between gap-4 px-4 py-3"
+                  >
                     <a
                       href={p.pdfUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex flex-1 items-center justify-between gap-3 hover:underline"
+                      className="flex flex-1 items-center gap-3 text-sm"
                     >
-                      <div className="flex-1">
-                        <div className="font-medium">{p.title ?? p.originFileName ?? "매뉴얼"}</div>
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-(--radius-utility) bg-(--color-canvas-parchment) text-xs font-semibold text-(--color-primary)">
+                        PDF
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate font-medium text-(--color-foreground)">
+                          {p.title ?? p.originFileName ?? title}
+                        </div>
                         <div className="text-xs text-(--color-muted-foreground)">
-                          PDF
-                          {p.fileSize ? ` · ${formatSize(p.fileSize)}` : null}
+                          {p.fileSize ? formatSize(p.fileSize) : "PDF"}
                         </div>
                       </div>
-                      <span className="text-(--color-primary)">열기 →</span>
+                      <span className="hidden text-sm font-medium text-(--color-primary) sm:inline">
+                        {openLabel} →
+                      </span>
                     </a>
-                    <BookmarkButton manualPdfId={p.id} redirect={`/p/${manual.id}`} size="sm" />
+                    <BookmarkButton manualPdfId={p.id} redirect={`/p/${manualId}`} size="sm" />
                   </li>
                 ))}
               </ul>
             </div>
-          ))
-        )}
-      </section>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
 
-      {/* 부품 */}
-      {parts.length > 0 ? (
-        <section className="mt-6 space-y-3">
-          <h2 className="text-xl font-semibold">부품</h2>
-          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {parts.map((p) => (
-              <li key={p.id} className="rounded-(--radius) border p-3">
-                <div className="flex items-start gap-3">
-                  {p.imageUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={p.imageUrl} alt={p.name} className="h-16 w-16 rounded object-cover" />
-                  ) : null}
-                  <div className="flex-1 text-sm">
-                    <div className="font-medium">{p.name}</div>
-                    {p.storeLink ? (
-                      <a
-                        href={p.storeLink}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-(--color-primary) hover:underline"
-                      >
-                        구매 →
-                      </a>
-                    ) : null}
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+function PartsSection({
+  title,
+  buyLabel,
+  parts,
+}: {
+  title: string;
+  buyLabel: string;
+  parts: PartRow[];
+}) {
+  return (
+    <section className="border-t border-(--color-divider-soft) py-12 lg:py-16">
+      <h2 className="text-2xl font-semibold tracking-tight text-(--color-foreground) lg:text-3xl">
+        {title}
+      </h2>
+      <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {parts.map((p) => (
+          <li
+            key={p.id}
+            className="flex items-start gap-3 rounded-(--radius-card) border border-(--color-border) bg-(--color-background) p-4"
+          >
+            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-(--radius-utility) bg-(--color-surface-tile)">
+              {p.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={p.imageUrl} alt={p.name} className="h-full w-full object-cover" />
+              ) : null}
+            </div>
+            <div className="min-w-0 flex-1 text-sm">
+              <div className="line-clamp-2 font-medium text-(--color-foreground)">{p.name}</div>
+              {p.storeLink ? (
+                <a
+                  href={p.storeLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-1 inline-flex text-(--color-primary) hover:underline"
+                >
+                  {buyLabel} →
+                </a>
+              ) : null}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
 
-      {/* FAQ — details/summary로 접기 */}
-      {faqs.length > 0 ? (
-        <section className="mt-6 space-y-2">
-          <h2 className="text-xl font-semibold">자주 묻는 질문</h2>
-          <div className="divide-y rounded-(--radius) border">
-            {faqs.map((f) => (
-              <details key={f.id} className="group">
-                <summary className="cursor-pointer list-none p-3 text-sm font-medium hover:bg-(--color-muted)">
-                  <span className="mr-2 inline-block transition group-open:rotate-90">▸</span>
-                  {f.question}
-                </summary>
-                <div className="whitespace-pre-line border-t bg-(--color-muted) p-3 text-sm">
-                  {f.answer}
-                </div>
-              </details>
-            ))}
+function FaqSection({ title, faqs }: { title: string; faqs: FaqRow[] }) {
+  return (
+    <section className="border-t border-(--color-divider-soft) bg-(--color-canvas-parchment) py-12 lg:py-16">
+      <h2 className="text-2xl font-semibold tracking-tight text-(--color-foreground) lg:text-3xl">
+        {title}
+      </h2>
+      <div className="mt-6 overflow-hidden rounded-(--radius-card) border border-(--color-border) bg-(--color-background)">
+        {faqs.map((f, i) => (
+          <details
+            key={f.id}
+            className={`group ${i > 0 ? "border-t border-(--color-divider-soft)" : ""}`}
+          >
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-sm font-medium text-(--color-foreground) hover:bg-(--color-canvas-parchment)">
+              <span>{f.question}</span>
+              <span
+                aria-hidden
+                className="text-(--color-muted-foreground) transition group-open:rotate-180"
+              >
+                ▾
+              </span>
+            </summary>
+            <div className="whitespace-pre-line border-t border-(--color-divider-soft) bg-(--color-canvas-parchment) px-5 py-4 text-sm text-(--color-ink-muted-80)">
+              {f.answer}
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CustomerServiceSection({
+  title,
+  phoneLabel,
+  emailLabel,
+  hoursLabel,
+  chatLabel,
+  cs,
+}: {
+  title: string;
+  phoneLabel: string;
+  emailLabel: string;
+  hoursLabel: string;
+  chatLabel: string;
+  cs: CsRow;
+}) {
+  const rows: { label: string; value: React.ReactNode }[] = [];
+  if (cs.phone)
+    rows.push({
+      label: phoneLabel,
+      value: (
+        <a href={`tel:${cs.phone}`} className="text-(--color-primary) hover:underline">
+          {cs.phone}
+        </a>
+      ),
+    });
+  if (cs.email)
+    rows.push({
+      label: emailLabel,
+      value: (
+        <a href={`mailto:${cs.email}`} className="text-(--color-primary) hover:underline">
+          {cs.email}
+        </a>
+      ),
+    });
+  if (cs.operationTime) rows.push({ label: hoursLabel, value: cs.operationTime });
+  if (cs.chatLink)
+    rows.push({
+      label: chatLabel,
+      value: (
+        <a
+          href={cs.chatLink}
+          target="_blank"
+          rel="noreferrer"
+          className="text-(--color-primary) hover:underline"
+        >
+          {chatLabel} →
+        </a>
+      ),
+    });
+
+  return (
+    <section className="border-t border-(--color-divider-soft) py-12 lg:py-16">
+      <h2 className="text-2xl font-semibold tracking-tight text-(--color-foreground) lg:text-3xl">
+        {title}
+      </h2>
+      <dl className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {rows.map((row, i) => (
+          <div
+            key={i}
+            className="rounded-(--radius-card) border border-(--color-border) bg-(--color-background) px-5 py-4"
+          >
+            <dt className="text-xs uppercase tracking-wide text-(--color-muted-foreground)">
+              {row.label}
+            </dt>
+            <dd className="mt-1 text-sm text-(--color-foreground)">{row.value}</dd>
           </div>
-        </section>
-      ) : null}
+        ))}
+      </dl>
+    </section>
+  );
+}
 
-      {/* 고객센터 */}
-      {customerService ? (
-        <section className="mt-6 space-y-2 rounded-(--radius) border p-4 text-sm">
-          <h2 className="text-base font-semibold">고객센터</h2>
-          {customerService.phone ? (
-            <div>
-              <span className="text-(--color-muted-foreground)">전화: </span>
-              <a href={`tel:${customerService.phone}`} className="text-(--color-primary) hover:underline">
-                {customerService.phone}
-              </a>
+function ExtrasSection({
+  title,
+  serialLabel,
+  productPageLabel,
+  storeLabel,
+  manual,
+}: {
+  title: string;
+  serialLabel: string;
+  productPageLabel: string;
+  storeLabel: string;
+  manual: ManualHeader;
+}) {
+  return (
+    <section className="border-t border-(--color-divider-soft) bg-(--color-canvas-parchment) py-12 lg:py-16">
+      <h2 className="text-2xl font-semibold tracking-tight text-(--color-foreground) lg:text-3xl">
+        {title}
+      </h2>
+      <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {manual.serialNumberLocation ? (
+          <li className="rounded-(--radius-card) border border-(--color-border) bg-(--color-background) px-5 py-4">
+            <div className="text-xs uppercase tracking-wide text-(--color-muted-foreground)">
+              {serialLabel}
             </div>
-          ) : null}
-          {customerService.email ? (
-            <div>
-              <span className="text-(--color-muted-foreground)">이메일: </span>
-              <a href={`mailto:${customerService.email}`} className="text-(--color-primary) hover:underline">
-                {customerService.email}
-              </a>
+            <div className="mt-1 text-sm text-(--color-foreground)">
+              {manual.serialNumberLocation}
             </div>
-          ) : null}
-          {customerService.operationTime ? (
-            <div>
-              <span className="text-(--color-muted-foreground)">운영시간: </span>
-              <span>{customerService.operationTime}</span>
-            </div>
-          ) : null}
-          {customerService.chatLink ? (
-            <div>
-              <a
-                href={customerService.chatLink}
-                target="_blank"
-                rel="noreferrer"
-                className="text-(--color-primary) hover:underline"
-              >
-                채팅 상담 →
-              </a>
-            </div>
-          ) : null}
-        </section>
-      ) : null}
+          </li>
+        ) : null}
+        {manual.productPage ? (
+          <li className="rounded-(--radius-card) border border-(--color-border) bg-(--color-background) px-5 py-4">
+            <a
+              href={manual.productPage}
+              target="_blank"
+              rel="noreferrer"
+              className="block"
+            >
+              <div className="text-xs uppercase tracking-wide text-(--color-muted-foreground)">
+                {productPageLabel}
+              </div>
+              <div className="mt-1 text-sm text-(--color-primary) hover:underline">
+                {manual.productPage.replace(/^https?:\/\//, "").replace(/\/.*$/, "")} →
+              </div>
+            </a>
+          </li>
+        ) : null}
+        {manual.publicStoreLink ? (
+          <li className="rounded-(--radius-card) border border-(--color-border) bg-(--color-background) px-5 py-4">
+            <a
+              href={manual.publicStoreLink}
+              target="_blank"
+              rel="noreferrer"
+              className="block"
+            >
+              <div className="text-xs uppercase tracking-wide text-(--color-muted-foreground)">
+                {storeLabel}
+              </div>
+              <div className="mt-1 text-sm text-(--color-primary) hover:underline">
+                {storeLabel} →
+              </div>
+            </a>
+          </li>
+        ) : null}
+      </ul>
+    </section>
+  );
+}
 
-      {/* 부가 정보 */}
-      {manual.serialNumberLocation || manual.productPage || manual.publicStoreLink ? (
-        <section className="mt-6 space-y-2 rounded-(--radius) border p-4 text-sm">
-          {manual.serialNumberLocation ? (
-            <div>
-              <span className="text-(--color-muted-foreground)">시리얼 위치: </span>
-              <span>{manual.serialNumberLocation}</span>
-            </div>
-          ) : null}
-          {manual.productPage ? (
-            <div>
-              <a
-                href={manual.productPage}
-                target="_blank"
-                rel="noreferrer"
-                className="text-(--color-primary) hover:underline"
-              >
-                제품 페이지 →
-              </a>
-            </div>
-          ) : null}
-          {manual.publicStoreLink ? (
-            <div>
-              <a
-                href={manual.publicStoreLink}
-                target="_blank"
-                rel="noreferrer"
-                className="text-(--color-primary) hover:underline"
-              >
-                구매 →
-              </a>
-            </div>
-          ) : null}
-        </section>
-      ) : null}
-    </main>
+function FooterActions({ homeLabel, searchLabel }: { homeLabel: string; searchLabel: string }) {
+  return (
+    <section className="border-t border-(--color-divider-soft) py-10 text-center">
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <Link
+          href="/manuals"
+          className="rounded-(--radius) border border-(--color-border-strong) px-5 py-2.5 text-sm font-medium text-(--color-ink) hover:bg-(--color-muted)"
+        >
+          {searchLabel}
+        </Link>
+        <Link
+          href="/"
+          className="rounded-(--radius) bg-(--color-primary) px-5 py-2.5 text-sm font-medium text-(--color-primary-foreground) hover:opacity-90"
+        >
+          {homeLabel}
+        </Link>
+      </div>
+    </section>
   );
 }
 

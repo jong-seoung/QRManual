@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 import { bookmarksApi } from "@/lib/api/bookmarks";
@@ -18,6 +19,7 @@ export function BookmarkButton({
   redirect?: string;
   size?: "sm" | "md";
 }) {
+  const t = useTranslations("bookmark");
   const [bookmarked, setBookmarked] = useState<boolean | null>(null);
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [busy, setBusy] = useState(false);
@@ -35,7 +37,7 @@ export function BookmarkButton({
       .catch((e: ApiError) => {
         if (cancelled) return;
         if (e.status === 401 || e.status === 403) setAuthed(false);
-        else setError(e.message ?? "상태 확인 실패");
+        else setError(e.message ?? "");
       });
     return () => {
       cancelled = true;
@@ -53,7 +55,7 @@ export function BookmarkButton({
       else await bookmarksApi.remove(manualPdfId);
     } catch (e) {
       setBookmarked(!next);
-      setError((e as ApiError).message ?? "실패");
+      setError((e as ApiError).message ?? "");
     } finally {
       setBusy(false);
     }
@@ -67,7 +69,7 @@ export function BookmarkButton({
         href={`/login?redirect=${encodeURIComponent(redirect ?? "/")}`}
         className={`inline-flex items-center rounded-(--radius) border hover:bg-(--color-muted) ${cls}`}
       >
-        ☆ 저장
+        ☆ {t("loginToSave")}
       </Link>
     );
   }
@@ -96,7 +98,7 @@ export function BookmarkButton({
       }`}
     >
       <span aria-hidden>{bookmarked ? "★" : "☆"}</span>
-      <span>{bookmarked ? "저장됨" : "저장"}</span>
+      <span>{bookmarked ? t("saved") : t("save")}</span>
     </button>
   );
 }

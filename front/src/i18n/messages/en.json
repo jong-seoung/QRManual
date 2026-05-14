@@ -76,5 +76,93 @@
       "secondaryGuest": "Log in",
       "secondaryUser": "Search manuals"
     }
+  },
+  "manualsList": {
+    "metaTitle": "Search manuals — QRManual",
+    "title": "Search manuals",
+    "subtitleWithKeyword": "{total} results for ‘{keyword}’",
+    "subtitle": "{total} manuals total",
+    "searchPlaceholder": "Search by product, model, or brand",
+    "searchSubmit": "Search",
+    "searchClear": "Clear",
+    "noImage": "No image",
+    "categoryFallback": "Manual",
+    "empty": {
+      "withKeyword": "No manuals match ‘{keyword}’.",
+      "withKeywordHint": "Try a different keyword, or browse popular manuals on the home page.",
+      "noKeyword": "No manuals are listed yet.",
+      "noKeywordHint": "New manuals will appear here soon.",
+      "backHome": "Back to home",
+      "clearSearch": "Clear search"
+    },
+    "pagination": {
+      "first": "First",
+      "prev": "Prev",
+      "next": "Next",
+      "last": "Last",
+      "summary": "Page {page} of {total}"
+    }
+  },
+  "publicManual": {
+    "official": "Official",
+    "model": "Model {code}",
+    "year": "{year}",
+    "sections": {
+      "pdfs": "Manuals",
+      "parts": "Parts",
+      "faqs": "Frequently asked",
+      "customerService": "Customer service",
+      "extras": "More"
+    },
+    "emptyPdfs": "No manuals uploaded yet.",
+    "openPdf": "Open",
+    "size": {
+      "bytes": "{value} B",
+      "kb": "{value} KB",
+      "mb": "{value} MB"
+    },
+    "parts": {
+      "buy": "Buy"
+    },
+    "cs": {
+      "phone": "Phone",
+      "email": "Email",
+      "hours": "Hours",
+      "chat": "Chat"
+    },
+    "extras": {
+      "serialLocation": "Serial location",
+      "productPage": "Product page",
+      "store": "Buy"
+    },
+    "actions": {
+      "search": "Find another manual",
+      "home": "Back to home"
+    }
+  },
+  "myBookmarks": {
+    "metaTitle": "Saved manuals — QRManual",
+    "title": "Saved manuals",
+    "count": "{count} saved",
+    "empty": {
+      "title": "No saved manuals yet.",
+      "hint": "Open any manual and tap the ★ button next to a PDF to save it here for quick access.",
+      "browse": "Browse manuals"
+    },
+    "open": "Open"
+  },
+  "header": {
+    "searchManuals": "Manuals",
+    "myBookmarks": "Saved",
+    "adminManuals": "Manage manuals",
+    "adminCompany": "Company",
+    "login": "Log in",
+    "signup": "Sign up"
+  },
+  "bookmark": {
+    "saved": "Saved",
+    "save": "Save",
+    "loading": "Checking",
+    "loginToSave": "Log in to save"
   }
 }

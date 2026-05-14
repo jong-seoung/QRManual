@@ -1,14 +1,19 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 import { bookmarksApi } from "@/lib/api/bookmarks";
 import type { ApiError } from "@/lib/api/client";
 import type { BookmarkedManualPdf } from "@/lib/api/bookmarks";
 import { getCookieHeader, getCurrentUser } from "@/lib/auth/server";
 
-export const metadata = { title: "저장한 사용설명서 — QRManual" };
+export async function generateMetadata() {
+  const t = await getTranslations("myBookmarks");
+  return { title: t("metaTitle") };
+}
 
 export default async function MyBookmarksPage() {
+  const t = await getTranslations("myBookmarks");
   const user = await getCurrentUser();
   if (!user) redirect("/login?redirect=/me/bookmarks");
 
@@ -18,51 +23,73 @@ export default async function MyBookmarksPage() {
   try {
     items = await bookmarksApi.listMine(cookieHeader);
   } catch (e) {
-    // 토큰 만료 등 → 로그인 다시
     if ((e as ApiError).status === 401) redirect("/login?redirect=/me/bookmarks");
     throw e;
   }
 
   return (
-    <main className="space-y-6 py-8">
-      <header>
-        <h1 className="text-3xl font-bold">저장한 사용설명서</h1>
-        <p className="mt-1 text-sm text-(--color-muted-foreground)">{items.length}개</p>
-      </header>
-
-      {items.length === 0 ? (
-        <p className="rounded-md border bg-(--color-muted) p-8 text-center text-sm text-(--color-muted-foreground)">
-          저장한 사용설명서가 없습니다. 매뉴얼 페이지에서 PDF별 ★ 저장 버튼을 눌러보세요.
+    <main>
+      <section className="py-12 lg:py-16">
+        <h1 className="text-4xl font-semibold tracking-tight text-(--color-foreground) lg:text-5xl">
+          {t("title")}
+        </h1>
+        <p className="mt-3 text-sm text-(--color-muted-foreground)">
+          {t("count", { count: items.length })}
         </p>
-      ) : (
-        <ul className="divide-y rounded-(--radius) border">
-          {items.map(({ pdf, manual, company }) => (
-            <li key={pdf.id} className="flex items-center gap-3 p-3 text-sm">
-              <span className="rounded-md bg-(--color-muted) px-2 py-0.5 text-xs uppercase">
-                {pdf.language}
-              </span>
-              <div className="min-w-0 flex-1">
-                <div className="truncate font-medium">
-                  {pdf.title ?? pdf.originFileName ?? "매뉴얼"}
-                </div>
-                <div className="truncate text-xs text-(--color-muted-foreground)">
-                  <Link href={`/p/${manual.id}`} className="hover:underline">
-                    {company.name} · {manual.name}
-                  </Link>
-                </div>
-              </div>
-              <a
-                href={pdf.pdfUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="text-(--color-primary) hover:underline"
+      </section>
+
+      <section className="border-t border-(--color-divider-soft) bg-(--color-canvas-parchment) py-12 lg:py-16">
+        {items.length === 0 ? (
+          <div className="rounded-(--radius-card) border border-(--color-border) bg-(--color-background) px-6 py-20 text-center">
+            <p className="text-lg font-semibold text-(--color-foreground)">{t("empty.title")}</p>
+            <p className="mx-auto mt-2 max-w-md text-sm text-(--color-muted-foreground)">
+              {t("empty.hint")}
+            </p>
+            <div className="mt-8">
+              <Link
+                href="/manuals"
+                className="rounded-(--radius) bg-(--color-primary) px-5 py-2.5 text-sm font-medium text-(--color-primary-foreground) hover:opacity-90"
               >
-                열기 →
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
+                {t("empty.browse")}
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+            {items.map(({ pdf, manual, company }) => (
+              <li
+                key={pdf.id}
+                className="rounded-(--radius-card) border border-(--color-border) bg-(--color-background) p-5 transition hover:border-(--color-primary)"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-(--radius-utility) bg-(--color-canvas-parchment) text-xs font-semibold uppercase text-(--color-primary)">
+                    {pdf.language}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="line-clamp-2 text-base font-semibold text-(--color-foreground)">
+                      {pdf.title ?? pdf.originFileName ?? manual.name}
+                    </div>
+                    <Link
+                      href={`/p/${manual.id}`}
+                      className="mt-1 inline-block truncate text-xs text-(--color-muted-foreground) hover:text-(--color-primary)"
+                    >
+                      {company.name} · {manual.name}
+                    </Link>
+                  </div>
+                  <a
+                    href={pdf.pdfUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="shrink-0 rounded-(--radius) bg-(--color-primary) px-4 py-2 text-sm font-medium text-(--color-primary-foreground) hover:opacity-90"
+                  >
+                    {t("open")} →
+                  </a>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </main>
   );
 }

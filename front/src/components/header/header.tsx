@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 import { getCurrentUser } from "@/lib/auth/server";
 import { isAdminOrAbove } from "@/lib/auth/types";
@@ -7,6 +8,7 @@ import { ThemeToggle } from "./theme-toggle";
 import { UserMenu } from "./user-menu";
 
 export async function Header() {
+  const t = await getTranslations("header");
   const user = await getCurrentUser();
   const showAdmin = isAdminOrAbove(user);
 
@@ -19,20 +21,20 @@ export async function Header() {
 
         <nav className="hidden items-center gap-4 text-sm sm:flex">
           <Link href="/manuals" className="hover:text-(--color-primary)">
-            설명서 검색
+            {t("searchManuals")}
           </Link>
           {user ? (
             <Link href="/me/bookmarks" className="hover:text-(--color-primary)">
-              저장한 사용설명서
+              {t("myBookmarks")}
             </Link>
           ) : null}
           {showAdmin ? (
             <>
               <Link href="/admin/manuals" className="hover:text-(--color-primary)">
-                설명서 관리
+                {t("adminManuals")}
               </Link>
               <Link href="/admin/company" className="hover:text-(--color-primary)">
-                회사
+                {t("adminCompany")}
               </Link>
             </>
           ) : null}
@@ -44,13 +46,13 @@ export async function Header() {
           ) : (
             <>
               <Link href="/login" className="hover:text-(--color-primary)">
-                로그인
+                {t("login")}
               </Link>
               <Link
                 href="/signup"
                 className="rounded-md bg-(--color-primary) px-3 py-1.5 text-(--color-primary-foreground) hover:opacity-90"
               >
-                가입
+                {t("signup")}
               </Link>
             </>
           )}

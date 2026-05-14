@@ -76,5 +76,93 @@
       "secondaryGuest": "로그인",
       "secondaryUser": "설명서 검색"
     }
+  },
+  "manualsList": {
+    "metaTitle": "설명서 검색 — QRManual",
+    "title": "설명서 검색",
+    "subtitleWithKeyword": "‘{keyword}’ 검색 결과 {total}개",
+    "subtitle": "전체 설명서 {total}개",
+    "searchPlaceholder": "제품명·모델명·브랜드 검색",
+    "searchSubmit": "검색",
+    "searchClear": "지우기",
+    "noImage": "이미지 없음",
+    "categoryFallback": "설명서",
+    "empty": {
+      "withKeyword": "‘{keyword}’에 해당하는 설명서가 없어요.",
+      "withKeywordHint": "다른 키워드로 검색하거나 메인에서 인기 설명서를 살펴보세요.",
+      "noKeyword": "아직 등록된 설명서가 없어요.",
+      "noKeywordHint": "곧 새로운 설명서들이 올라올 거예요.",
+      "backHome": "메인으로 돌아가기",
+      "clearSearch": "검색 초기화"
+    },
+    "pagination": {
+      "first": "처음",
+      "prev": "이전",
+      "next": "다음",
+      "last": "끝",
+      "summary": "{page} / {total} 페이지"
+    }
+  },
+  "publicManual": {
+    "official": "공식",
+    "model": "모델 {code}",
+    "year": "{year}",
+    "sections": {
+      "pdfs": "사용설명서",
+      "parts": "부품",
+      "faqs": "자주 묻는 질문",
+      "customerService": "고객센터",
+      "extras": "더 알아보기"
+    },
+    "emptyPdfs": "등록된 매뉴얼이 없어요.",
+    "openPdf": "열기",
+    "size": {
+      "bytes": "{value} B",
+      "kb": "{value} KB",
+      "mb": "{value} MB"
+    },
+    "parts": {
+      "buy": "구매"
+    },
+    "cs": {
+      "phone": "전화",
+      "email": "이메일",
+      "hours": "운영시간",
+      "chat": "채팅 상담"
+    },
+    "extras": {
+      "serialLocation": "시리얼 위치",
+      "productPage": "제품 페이지",
+      "store": "구매하기"
+    },
+    "actions": {
+      "search": "다른 설명서 찾기",
+      "home": "메인으로"
+    }
+  },
+  "myBookmarks": {
+    "metaTitle": "저장한 사용설명서 — QRManual",
+    "title": "저장한 사용설명서",
+    "count": "{count}개 보관 중",
+    "empty": {
+      "title": "아직 저장한 설명서가 없어요.",
+      "hint": "설명서 페이지에서 ★ 버튼으로 자주 보는 PDF를 저장해 두면 여기서 바로 열 수 있어요.",
+      "browse": "설명서 둘러보기"
+    },
+    "open": "열기"
+  },
+  "header": {
+    "searchManuals": "설명서 검색",
+    "myBookmarks": "저장한 사용설명서",
+    "adminManuals": "설명서 관리",
+    "adminCompany": "회사",
+    "login": "로그인",
+    "signup": "가입"
+  },
+  "bookmark": {
+    "saved": "저장됨",
+    "save": "저장",
+    "loading": "확인 중",
+    "loginToSave": "저장하려면 로그인"
   }
 }
